@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include<pthread.h>
+
+int counter;
+pthread_mutex_t lock;
+
+void* fun1()
+{
+  
+     pthread_mutex_lock(&lock);
+
+	unsigned long i =0;
+	counter += 1;
+	printf("\n job %d staterd\n",counter);
+
+	//for(i;i<(0xFFFFFFFF);i++);  10000000
+                  
+	printf("\n job %d finished\n",counter);
+      
+    pthread_mutex_unlock(&lock);
+
+}
+
+
+
+main()
+{
+	pthread_t tid1,tid2;
+
+
+	pthread_create(&tid1,NULL,&fun1,NULL);
+	pthread_create(&tid2,NULL,&fun1,NULL);
+
+	pthread_join(tid1,NULL);
+	pthread_join(tid2,NULL);
+}

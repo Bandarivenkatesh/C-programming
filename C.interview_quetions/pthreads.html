@@ -1,0 +1,1064 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<title>pthreads.html</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="stylesheet" type="text/css" href="pthreads_files/style.css" title="StyleSheet">
+</head>
+
+<body>
+
+<table width="100%"><tbody><tr>
+<td bgcolor="660000" align="RIGHT">
+<a href="http://www.cs.fsu.edu/%7Ebaker/realtime/restricted/index.html"><u><font size="1" color="cccc99">
+&#8593; Real-Time Systems</font></u></a>
+</td></tr></tbody></table>
+
+<h2 align="CENTER">POSIX Threads API</h2>
+
+<table width="100%"><tbody><tr><td bgcolor="ff9999"><font size="1">&nbsp;</font></td></tr></tbody></table>
+
+<h3>Overview</h3>
+
+<ul>
+<li>The POSIX threads API is designed to allow maximum freedom
+to implementors</li>
+<li>This means the API is not "robust" against mis-use</li>
+<li>This means the semantics of several operations are only very loosly defined,
+and so may have quite different outcomes, depending on the implementation</li>
+<li>This means the programmer must exercise extreme discipline in order to
+write code that will execute correctly on all implementation, under all scenarios</li>
+<li>It is very easy to write incorrect code and not be aware of it,
+because tests produced the expected results for
+one implemention, all or most of the time.
+</li>
+</ul>
+
+<!-- notes --><hr>
+
+<p>These notes are intended only to provide a brief introduction
+to the POSIX threads API.  They are not intended to fully duplicate the
+on-line manual pages.  For detailed explanations of signals, handlers, and
+the operations that generate signals, use the Unix <i>man</i> command
+to view the on-line manual pages, or look in a book about the Unix API
+or threads.  Links to some on-line tutorials on threads programming
+are given at the <a href="#end">end</a> of these notes.</p>
+
+<p>In all the examples here, correct code must check the function
+return values, to verify that the calls succeeded.  Those checks
+are omitted from the example code fragments, for easier
+readability.  That does not mean you can or should omit the checks
+in an actual program.</p>
+
+<!-- /notes -->
+
+<h3>Threads</h3>
+
+<p>A POSIX <i>thread</i> is a single flow of control within a
+process.<br> It shares a virtual address space with other threads in
+the same process.<br> The following are per-thread attributes:
+
+</p><ul>
+<li>execution stack (within shared address space)</li>
+<li>set of blocked signals (the <i>signal mask</i>)
+</li><li>set of signals pending for the thread</li>
+<li>scheduling policy and priority</li>
+<li><i>errno</i> value</li>
+<li>thread-specific key-to-attribute mapping</li>
+</ul>
+<p></p>
+
+<h3>Header Files you Need for Thread Programming</h3>
+
+<pre>#define _REENTRANT
+#include &lt;pthread.h&gt;</pre>
+#include &lt;sched.h&gt;
+
+<p><i>_REENTRANT</i> indicates that the
+<a href="#reentrant">reentrant</a> (<i>i.e.</i> thread
+safe) versions of the standard libraries should be used.</p>
+
+<p>The header file <i>pthread.h</i> defines the POSIX
+thread API.</p>
+
+<p>The header file <i>sched.h</i> defines the process
+and thread scheduling API.  Of the functions explained here,
+only <i>sched_yield()</i> requires it.</p>
+
+<h3><a name="reentrant">Reentrancy</a></h3>
+<ul>
+<li>safe for concurrent execution with itself</li>
+<li>stronger than recursive</li>
+<li>cannot share copies of local variables (<i>i.e.</i>, no C <i>static</i>
+local declarations)</li>
+<li>non-reentrant code is not safe for use with threads</li>
+<li>standard versions some C library functions may not be reentrant<br>
+<em>(Why?)</em></li>
+</ul>
+
+<!-- notes --><hr>
+
+<p>A subprogram is <i>reentrant</i> if it is safe for it to be called
+concurrently with another call to itself.  It is important that
+all functions that are called by threads must be reentrant.</p>
+
+<p>One of the things that can make a subprogram non-reentrant
+is for it to access the same memory that is accessed by another
+call to the same subprogram.  Of course this could happen if the
+subprogram accesses parameters that are passed by reference, but
+we usually do not say that alone makes it non-reentrant, since
+it could be perfectly safe so long as the callers take care not
+to call it with the same arguments concurrently.  On the other
+hand, if the subprogram accesses global variables or statically
+allocated local variables without any locking mechanism to
+protect them from concurrent accesses, it is not reentrant.
+For example, if a function
+written in the C language has local variables that are declared
+<i>static</i> chances are it is not reentrant.</p>
+
+<p>For programs written in the C language, if the operating system
+supports threads, reentrant versions of the functions in the standard
+libraries are supposed to be provided.  However, these functions are
+likely to to contain locking/unlocking code to protect shared
+variables, which adds some execution time overhead.  So that programs
+that do not use multithreading do not pay this overhead, the system
+default may be to link in the non-reentrant libraries.  To make sure
+the system uses the reentrant versions, the application should define
+the constant <i>_REENTRANT</i> before any <i>#include</i> directives.
+This directive will change the effects of the header files,
+through conditional compilation (<i>#ifdef</i>) directives embedded
+in the files.</p>
+
+<!-- /notes -->
+
+
+<h3><a name="pthread_create">Creating a Thread</a></h3>
+<pre>#include &lt;pthread.h&gt;
+int pthread_create(pthread_t *new_thread_ID,
+    const pthread_attr_t *attr,
+    void * (*start_func)(void *), void *arg);</pre>
+
+<!-- notes --><hr>
+<p>To create a thread, you need to specify a place to
+store the ID of the new thread, the procedure
+that the thread should execute, optionally some thread creation
+attributes, and optionally an argument for the thread.  The
+call returns a result code.</p>
+<!-- /notes -->
+
+<h3><a name="pthread_join">Joining with a Thread</a></h3>
+<pre>#include &lt;pthread.h&gt;
+int pthread_join(pthread_t target_thread, void **status);</pre>
+
+<!-- notes --><hr>
+<p>By default, threads are created <i>joinable</i>.
+This means that some other thread is required to
+call <i>pthread_join</i> to collect a terminated thread,
+in a fashion similar to the requirement for a parent process
+to collect status for terminated child processes.</p>
+
+<center><img src="pthreads_files/forkjoin.gif"></center>
+
+<p>The use on threads of <i>pthread_join()</i> is similar to the use
+on processes of <i>waitpid()</i>.  Details differ somewhat, but the
+main effect is for one thread to wait for (join with) the completion
+of another thread.  The term "join" reflects the joining of control
+flows, as indicated in the diagram.</p>
+
+<center><img src="pthreads_files/nojoin.gif"></center>
+
+<p>If you write a main program that does not use join to wait for
+its threads, when the main thread exits all the component threads
+will be aborted.  They will just be interrupted and terminated.</p>
+
+<!-- notes -->
+
+<h3><a name="detached">Detached Threads</a></h3>
+<p>A <i>detached</i> thread is not joinable.
+As soon as the thread terminates its resources may be
+recovered.</p>
+
+<h3><a name="creationattrs">Thread Creation Attributes</a></h3>
+<pre>#include &lt;pthread.h&gt;
+int pthread_attr_init(pthread_attr_t *attr);
+int pthread_attr_destroy(pthread_attr_t *attr);
+...
+int pthread_attr_setdetachstate(pthread_attr_t *attr,
+  int detachstate);
+int pthread_attr_getdetachstate(const pthread_attr_t *attr,
+  int *detachstate);
+int pthread_attr_setstacksize(pthread_attr_t *attr,
+  size_t stacksize);
+int pthread_attr_getstacksize(const pthread_attr_t *attr,
+  size_t *stacksize);
+...</pre>
+
+<!-- notes --><hr>
+<p>Certain attributes of a thread, including its priority and
+whether it is created joinable or detached, are specified
+via a parameter of type <i>pthread_attr_t</i>.</p>
+<!-- /notes -->
+
+<h3><a name="createdetached">Creating a Detached Thread</a></h3>
+<pre>#include <pthread.h>
+#include &lt;string.h&gt;
+pthread_attr_t attr;
+pthread_attr_init (&amp;attr);
+pthread_attr_setdetachstate (&amp;attr, PTHREAD_CREATE_DETACHED);
+result = pthread_create (&amp;server, &amp;attr, thread_body, connfd);
+if (result) fprintf (stderr, "pthread_create: %s", strerror (result));</pthread.h></pre>
+
+<!-- notes --><hr>
+<p>The thread operations generally do not use <i>errno</i>.
+Instead, they return the error code as the function value.</p>
+<!-- /notes -->
+
+<h3><a name="self">Getting the ID of the Current Thread</a></h3>
+<pre>#include &lt;pthread.h&gt;
+pthread_t pthread_self(void);</pre>
+<p>This function can be called to get the ID of the currently executing
+thread.  It is serves for threads the same purpose
+as <i>getpid()</i> serves for processes.</p>
+
+<h3><a name="mutexes">Protecting a Critical Section with a Mutex</a></h3>
+<pre>pthread_mutex_t M;
+pthread_mutex_lock (&amp;M);
+... critical section ...
+pthread_mutex_unlock (&amp;M);</pre>
+
+<!-- notes --><hr>
+
+<p>This example is simplified.  It does not check for
+error codes.</p>
+
+<p>A mutex is a memory-based data object that is used to implement mutual
+exclusion.  The intent it so provide the kind of protection that is 
+needed to implement a monitor.  Mutexes are designed to provide the mutual
+needed for a monitor.  They are designed to work with condition variables,
+which provide the rest of the monitor support.</p>
+
+<p>On some systems mutexes are likely to only be supported for use
+between threads within a single process.</p>
+
+<p><i>What happens if <i>pthread_init()</i> is called more than once on the same mutex?</i></p>
+
+<p>The man-page, which is based on the POSIX standard, says that this
+"results in undefined behavior".  This means that if you try to
+initialize a mutex more than once you are to blame for whatever happens.
+Your program might crash, in some unpredicatable way, or it might
+just reinitialize the mutex.  If you make any assumptions about what
+happens, your code is certainly not portable.</p>
+
+<!-- /notes -->
+
+<h3>Mutex Operations</h3>
+<pre>#include &lt;pthread.h&gt;
+int pthread_mutex_init(pthread_mutex_t *mp,
+   const pthread_mutexattr_t *attr);
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+int pthread_mutex_lock(pthread_mutex_t *mp);
+int pthread_mutex_trylock(pthread_mutex_t *mp);
+int pthread_mutex_unlock(pthread_mutex_t *mp);
+int pthread_mutex_destroy(pthread_mutex_t *mp);</pre>
+
+<h3>Mutex Operation Semantics</h3>
+<ul>
+<li>pthread_mutex_lock (&amp;M)
+<ul>
+  <li>blocks the calling thread until the mutex becomes unlocked,
+      if necessary</li>
+  <li>locks the mutex M</li>
+  <li>only one thread can hold the lock on the mutex at any one time</li>
+  <li>may not check for most errors, including the error of locking
+      a mutex whose lock is already held by the calling thread</li>
+  <li>effects of errors are mostly undefined</li>
+</ul>
+</li>
+<li>pthread_mutex_unlock (&amp;M)
+<ul>
+  <li>unlocks the mutex M</li>
+  <li>may not check for most errors, including the error of unlocking
+      a mutex whose lock is not held by the calling thread</li>
+  <li>effects of errors are mostly undefined</li>
+</ul>
+</li>
+</ul>
+
+<h3>Mutex Creation Attributes</h3>
+<pre>#include &lt;pthread.h&gt;
+int pthread_mutexattr_init(pthread_mutexattr_t *attr);
+int pthread_mutexattr_destroy(pthread_mutexattr_t *attr);
+int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr,
+  int process-shared);
+int  pthread_mutexattr_getpshared(const  pthread_mutexattr_t *attr,
+  int *process-shared);</pre>
+
+<!-- notes --><hr>
+<p>For mutex creation, like thread creation, one uses an attribute
+object to pass attributes of the mutex that is being created.</p>
+<!-- /notes -->
+
+<h3>Creating A Mutex</h3>
+<pre>pthread_mutex_t M;
+pthread_mutexattr_t attr;
+pthread_mutexattr_init (&amp;attr);
+pthread_mutex_init (&amp;M, &amp;attr);</pre>
+
+<!-- notes --><hr>
+<p>This example is simplified.  It does not check for
+error codes.</p>
+<!-- /notes -->
+
+<h3>Condition Variable Operation Semantics</h3>
+<ul>
+<li>pthread_cond_wait (&amp;CV, &amp;M)
+<ul>
+  <li>should only be called by a thread that holds locked mutex M
+  </li><li>unlocks the mutex M
+  </li><li>gives other threads a chance to execute</li>
+  <li><em>may</em> suspend the calling thread until CV is signalled</li>
+  <li>relocks the mutex (blocking until the mutex becomes available)
+      before returning</li>
+  <li>must always be used in a loop that polls for a meaningful logical condition
+      involving other variables</li>
+  <li>may not check for most errors</li>
+  <li>effects of errors are mostly undefined</li>
+</ul>
+</li>
+<li>pthread_cond_signal (&amp;CV)
+<ul>
+  <li>does not require that any mutex lock be held</li>
+  <li>ensures one or more of the threads waiting on CV (if any) wake up<br>
+      (and begin trying to acquire the associated mutex)</li>
+  <li>does not check for most errors, including the error of unlocking
+      a mutex whose lock is not held by the calling thread</li>
+  <li>effects of errors are mostly undefined</li>
+</ul>
+</li>
+</ul>
+
+<h3>Condition Variables</h3>
+<ul>
+<li>Have ambiguous implementation semantics (see further below)</li>
+<li>Are not variables</li>
+<li>Do not represent conditions</li>
+<li>To be used, require an associated mutex</li>
+<li>Require a polling loop that checks a logical condition</li>
+</ul>
+
+<!-- notes --><hr>
+<p>The tricky thing about CV's is that the POSIX standard intentionally
+leaves a lot of freedom to the implementor, so the CV functions can do
+different things on different systems.  This means that a programmer
+must write code more carefully than usual, so that the code will work for
+all legal implementations of CV's.</p>
+<!-- /notes -->
+
+<h3>Some Legal Condition Variable Implementations</h3>
+<p>The following are pseudo-code descriptions of some
+permissible implementations.</p>
+
+<table width="100%" border="">
+<tbody><tr><th>pthread_cond_wait(&amp;CV,&amp;M)</th>
+    <th>pthread_cond_signal(&amp;CV)</th>
+</tr>
+<tr>
+    <td>pthread_mutex_unlock(&amp;M);<br>
+        sched_yield();<br>
+        pthread_mutex_lock(&amp;M);
+   </td>
+    <td>(do nothing)
+    </td>
+</tr>
+<tr>
+    <td>pthread_mutex_unlock(&amp;M);<br>
+        CV.enqueue (This_Thread);<br>
+        This_Thread.sleep;<br>
+        pthread_mutex_lock(&amp;M);
+    </td>
+    <td>T = CV.dequeue_one;<br>
+        T.wakeup;
+    </td>
+</tr>
+<tr>
+    <td>pthread_mutex_unlock(&amp;M);<br>
+        CV.enqueue (This_thread);<br>
+        This_thread.sleep;<br>
+        pthread_mutex_lock(&amp;M);
+    </td>
+    <td>while (CV.queue_nonempty) {<br>
+           T = CV.dequeue_one;<br>
+           T.wakeup;<br>
+        }
+    </td>
+</tr>
+</tbody></table>
+
+<!-- notes --><hr>
+<p>The main thing about <i>pthread_cond_wait</i> is that it must release the mutex,
+give other threads a chance to lock (and then unlock) the mutex,
+and then relock the mutex.</p>
+<p>Whether the thread goes to sleep during the interval in which the
+mutex is unlocked is up to the implementation.</p>
+<p>The main thing about <i>pthread_cond_signal</i> is that if any threads
+are sleeping on the CV, at least one of them will wake up, lock the mutex,
+and recheck the logical condition.</p>
+<p>Whether it wakes up one thread or all the threads that are waiting on
+the CV is upt to the implementation.</p>
+<!-- /notes -->
+
+<h3><a name="cvs">Synchronizing Threads with a Condition Variable</a></h3>
+<pre>pthread_cond_t C;
+pthread_mutex_t M;
+int State = 0;</pre>
+<p><b>Waiter:</b></p>
+<pre>pthread_mutex_lock (&amp;M);
+while (! State) pthread_cond_wait (&amp;C, &amp;M);
+pthread_mutex_unlock (&amp;M);
+</pre>
+<p><b>Signaler:</b></p>
+<pre>pthread_mutex_lock (&amp;M);
+State = 1;
+pthread_cond_signal (&amp;C);
+pthread_mutex_unlock (&amp;M);</pre>
+
+<!-- notes --><hr>
+<p>Condition variables are generally only supported for use
+between threads within a single process.</p>
+<p>Condition variables can only be used with a mutex.</p>
+<!-- /notes -->
+
+<h3>Condition Variable Operations</h3>
+<pre>#include &lt;pthread.h&gt;
+int pthread_cond_init(pthread_cond_t *cond,
+   const pthread_condattr_t *attr);
+int pthread_cond_wait(pthread_cond_t *cond,
+   pthread_mutex_t *mutex);
+int pthread_cond_timedwait(pthread_cond_t *cond,
+   pthread_mutex_t *mutex,
+   const struct timespec *abstime);
+int pthread_cond_signal(pthread_cond_t *cond);
+int pthread_cond_broadcast(pthread_cond_t *cond);
+int pthread_cond_destroy(pthread_cond_t *cond);</pre>
+
+<h3>Yielding to Another Thread</h3>
+<pre>#include &lt;sched.h&gt;
+int sched_yield (void)</pre>
+
+<!-- notes --><hr>
+<p>Calling this function invokes the scheduler,
+which may switch execution to another thread.</p>
+<!-- /notes -->
+
+<h3><a name="once">Initializing Shared Data Just Once</a></h3>
+
+<pre>     #include &lt;pthread.h&gt;
+     pthread_once_t once_control = PTHREAD_ONCE_INIT;
+
+     int    pthread_once(pthread_once_t    *once_control,    void
+     (*init_routine, void)););</pre>
+
+<!-- notes --><hr>
+<p>There are situations where a thread may need to initialize some
+global data, but it cannot tell in advance whether another thread
+might already have initialized the same data.  It may be unsafe to
+initialize something more than once.  For example, the Solaris man-page
+for <i>pthread_mutex_init()</i> says:</p>
+
+<blockquote>Attempting to initialize an already initialized mutex
+     results in undefined behavior.</blockquote>
+
+<p>That makes sense.  For example, what would happen if we reinitialize
+a mutex that is already locked and may already have some threads blocked
+on it?</p>
+
+<p>To see what happens, take a look at program
+<a href="http://www.cs.fsu.edu/%7Ebaker/realtime/restricted/examples/threads/init_bad.c">
+examples/threads/init_bad.c</a>, in directory
+<a href="http://www.cs.fsu.edu/%7Ebaker/realtime/restricted/examples/threads">examples/threads</a>.
+Better, compile it and execute it.</p>
+
+<!-- /notes -->
+
+<h3>Naive Solution to Initialization Problem</h3>
+
+<pre>void initialize () {
+   static int init_flag = 0;  /* is initialized to 0 at process start time */
+   if (! init_flag) {
+      /* window for race between threads is here
+         if two threads fetch the value 0 before one increments init_flag,
+         both will execute the initialization code, and if that happens
+         there may be a problem
+      */
+      init_flag++;
+      pthread_mutex_init (&amp;M, NULL);a
+   }
+   pthread_mutex_lock (&amp;M);
+   /* now initialize other global data, under protection of the mutex */
+   pthread_mutex_unock (&amp;M);
+}</pre>
+
+<!-- notes --><hr>
+
+<p>This solution tries to use a static flag variable to prevent
+multiple initializations.</p>
+
+<p>As the comments in the code above indicate, this is not 100% safe.
+It is possible (though unlikely) that two threads might fetch the value
+of <i>init_flag</i> concurrently and both find the value to be zero,
+in which case <i>pthread_mutex_init()</i> would be called twice on the
+same mutex.  Things that can go wrong but usually don't are the worst
+nightmare of concurrent programmers, because when they do go wrong the
+error is very hard to track down.  For this reason, a good concurrent
+programmer would not be satisfied with the above "solution".</p>
+<!-- /notes -->
+
+<p>There is a special thread API function to solve this problem,
+pthread_once.  It can be used as follows, to solve our mutex
+initialization problem.</p>
+
+<h3>The Correct Solution: using <tt>pthread_once_t</tt></h3>
+
+<pre>void init_routine () {
+   pthread_mutex_init (&amp;M, NULL);
+}
+
+void initialize () {
+   static pthread_once_t init_flag = PTHREAD_ONCE_INIT;
+   /* is initialized at process start time */
+   pthread_once (&amp;init_flag, init_routine);
+   pthread_mutex_lock (&amp;M);
+   /* now initialize other global data, under protection of the mutex */
+   pthread_mutex_unock (&amp;M);
+}</pre>
+
+<!-- notes --><hr>
+<p>Note that the idea is basically the same as our first
+attempt.  The variable <i>init_flag</i>
+is used to indicate whether the initialization has been done yet.
+The difference is that the function <i>pthread_once</i> is
+guaranteed to <em>atomically</em> test and modify the flag.</p>
+
+<p>For complete examples of both solutions, see files
+<a href="http://www.cs.fsu.edu/%7Ebaker/realtime/restricted/examples/threads/init_weak.c">
+examples/threads/init_weak.c</a> and
+<a href="http://www.cs.fsu.edu/%7Ebaker/realtime/restricted/examples/threads/init_good.c">
+examples/threads/init_good.c</a>.</p>
+<!-- /notes -->
+
+<h3><a id="priorities">Thread Priorities</a></h3><a id="priorities">
+<ul>
+<li>Threads scheduling policies may be specified</li>
+<li>Within policies, priorities may be specified</li>
+<li>Policy and priority may be specfied at creation time, or a run time,
+by the affected thread or by another</li>
+</ul>
+
+<h3>Thread Scheduling Policies</h3>
+<ul>
+<li>SCHED_FIFO
+<ul>
+<li>preemptive priority scheduling</li>
+<li>highest priority thread runs until it choses to block/sleep</li>
+<li>when it unblock/wakes it goes to the end of the queue for its priority</li>
+</ul>
+</li>
+<li>SCHED_RR
+<ul>
+<li>preemptive priority scheduling</li>
+<li>highest priority thread runs until it choses to block/sleep, or
+is suspended because it has used up its time slice (quantum)</li>
+<li>when it unblock/wakes it goes to the end of the queue for its priority</li>
+<li>when it uses up its time slice it also goes to the end of the queue for its priority</li>
+</ul>
+</li>
+<li>SCHED_OTHER
+<ul>
+<li>an implementation-dependent scheduling policy</li>
+<li>the default</li>
+<li>generally lower priority than SCHED_RR and SCHED_FIFO<n li="">
+</n></li></ul>
+</li>
+</ul>
+
+<h3>Setting Thread Scheduling Policies &amp; Priority at Creation</h3>
+
+<pre>#include &lt;pthread.h&gt;
+#include &lt;sched.h&gt;
+
+pthread_t th;
+pthread_attr_t attr;
+struct sched_param parm;
+// int scope;
+
+pthread_attr_init (&amp;attr);
+pthread_attr_setschedpolicy(&amp;attr, SCHED_FIFO);
+parm.priority = sched_get_priority_max (SCHED_FIFO) - 1;
+/* next-to-highest priority */
+pthread_attr_setschedparam(&amp;attr, SCHED_FIFO, &amp;parm);
+// scope = PTHREAD_SCOPE_SYSTEM;
+// pthread_attr_setscope(&amp;attr, &amp;scope);
+// pthread_attr_setdetachstate(&amp;attr, PTHREAD_CREATE_DETACHED);
+pthread_create(&amp;th, &amp;attr, some_function, some_argument);
+</pre>
+
+<!-- notes --><hr>
+
+<p>The commented-out lines are examples of other thread creation
+attributes that one might want to set, that do not directly relate
+to priority.</p>
+
+<p>As in all the examples here, correct code must check the
+function return values, to verify that the calls succeeded.</p>
+
+<p>If you don't set the scheduling policy and priority at the time of creation,
+you may set it later, but beware that between times the thread
+will be scheduled according to the system default policy,
+or according to the policy inherited from the parent.  The latter
+can be requested using <i>pthread_attr_setinheritsched()</i>.</p>
+
+<!-- /notes -->
+
+<h3>Setting Thread Scheduling Policies Later</h3>
+
+<ul>
+<li><i>pthread_setschedparam()</i> : can set the policy and priority of a thread</li>
+<li><i>pthread_setschedprio()</i> : can set just the priority of a thread</li>
+</ul>
+
+<!-- notes --><hr>
+
+<p>There is also a function <i>sched_setscheduler()</i>, that
+allows one to set the scheduling policy and priority of a process.
+The effect on multi-threaded processes does not appear to be
+defined by the standards.  A reasonable guess at the effect is:
+(1) if the process has more than one thread, this will probably
+only affect the scheduling of the main thread; (2) or, if there
+are threads with PTHREAD_SCOPE_PROCESS, it may affect their
+scheduling as a group.</p>
+
+<!-- /notes -->
+
+</a><h3><a id="priorities"></a><a name="setconcurrency">Setting Concurrency Level</a></h3>
+
+<ul>
+<li>A two-level thread implementation may not give every user thread
+a kernel thread</li>
+<li>To see speed-up from multiple CPU's more kernel threads may be necessary</li>
+<li>Solaris allows user to specified desired concurrency level</li>
+</ul>
+
+<pre>#include &lt;pthread.h&gt;
+int ptread_getconcurrency(void);int
+pthread_setconcurrency(int new_level);</pre>
+
+<!-- notes --><hr>
+
+<p>The Solaris <i>man</i> page for <i>pthread_setconcurrency()</i> says:
+</p><pre>     Unbound threads in a process may or may not be  required  to
+     be  simultaneously active. By default, the threads implemen-
+     tation ensures that  a  sufficient  number  of  threads  are
+     active  so  that  the process can continue to make progress.
+     While this conserves system resources, it  may  not  produce
+     the most effective level of concurrency.
+
+     The  pthread_setconcurrency() function allows an application
+     to  inform  the  threads  implementation of its desired con-
+     currency level, new_level. The actual level  of  concurrency
+     provided  by the implementation as a result of this function
+     call is unspecified.</pre>
+
+<p>An application should specify a concurrency level higher than
+one if it expects the threads of a process to make use of more than
+one physical processor of an SMP system.</p>
+
+<!-- /notes -->
+
+<h3><a name="specific">Thread-specific Data</a></h3>
+
+<pre>#include &lt;pthread.h&gt;
+int pthread_key_create(pthread_key_t *key, void (*destr_function)(void *));
+int pthread_key_delete(pthread_key_t key);
+int pthread_setspecific(pthread_key_t key, const void *pointer);
+void * pthread_getspecific(pthread_key_t key);</pre>
+
+<p>See the complete example program in
+<a href="http://www.cs.fsu.edu/%7Ebaker/realtime/restricted/examples/threads/perthread.c">perthread.c</a> in
+<a href="http://www.cs.fsu.edu/%7Ebaker/realtime/restricted/examples/threads">examples/threads</a>.</p>
+
+<!-- notes --><hr>
+
+<p>These functions provide a mechanism for a library function to
+retrieve thread-specific data.  The example program cited above shows
+how they can be used.</p>
+
+<p>This feature amounts a database, in which the identity of the
+current thread (implicit) and another data value (of type
+pthread_key_t) can be used as keys to store and retrieve a pointer value.
+It is intended for the implementors of thread-safe libraries, to
+keep data that must be different for each thread.  (For example,
+consider the global variable <i>errno</i>.)
+Different libraries may install different keys, and so each have their
+own private thread-specific data.</p>
+
+<ul>
+<li>Create a thread attribute key, one time, to be used for all
+threads:
+<pre>pthread_key_t new_key;
+  pthread_key_create (&amp;new_key, my_destructor_function));</pre>
+</li>
+
+<li>Once for each thread, in the thread creator or in the
+thread-specific initialization code, allocate a record structure to
+hold the data, initialize it, and "hang" a pointer to it from the thread
+with the given key, using <i>pthread_setspecific</i>:
+<pre>p = (perthread_data_ptr) malloc (sizeof (struct perthread_data));
+  ... initialize data fields of struct pointed to by p ...</pre></li>
+  pthread_setspecific (my_key, (void *) p));
+
+<li>Whenever you need to get the pointer the thread-specific
+record for the current thread:
+<pre>perthread_data_ptr mine = pthread_getspecific (my_key);</pre>
+</li>
+</ul>
+
+<!-- /notes -->
+
+<h3>Role of Key in Thread-specific Data</h3>
+
+<center><img src="pthreads_files/perthreaddata.gif"></center>
+
+<!-- notes --><hr>
+
+<p>The figure shows how the key is like a tag on a reference from the
+thread to the user-provided thread-specific object, which is
+implemented by <i>pthread_set/getspecific()</i>.</p>
+
+<!-- /notes -->
+
+<h3>Use of Multiple Keys in Thread-specific Data</h3>
+
+<center><img src="pthreads_files/perthreaddata2.gif"></center>
+
+<!-- notes --><hr>
+
+<p>The shows how using different keys allows different libraries
+to each associate their own thread-specific data with each thread,
+without interfering with one another.</p>
+
+<!-- /notes -->
+
+<h3>Other Thread Operations</h3>
+
+<p>You can find a full listing of all the pthread operations
+by using the Unix command "<tt>apropos pthread</tt>".  For
+example, you may get the following output:</p>
+
+<pre><font size="-1">
+[baker@websrv processes]$ apropos pthread
+pthread_atfork       (3thr)  - register handlers to be called at fork(2) time
+pthread_attr_destroy [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_getdetachstate [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_getinheritsched [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_getschedparam [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_getschedpolicy [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_getscope [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_init    (3thr)  - thread creation attributes
+pthread_attr_setdetachstate [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_setinheritsched [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_setschedparam [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_setschedpolicy [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_attr_setscope [pthread_attr_init] (3thr)  - thread creation attributes
+pthread_cancel       (3thr)  - thread cancellation
+pthread_cleanup_pop [pthread_cleanup_push] (3thr)  - install and remove cleanup handlers
+pthread_cleanup_pop_restore_np [pthread_cleanup_push] (3thr)  - install and remove cleanup handlers
+pthread_cleanup_push (3thr)  - install and remove cleanup handlers
+pthread_cleanup_push_defer_np [pthread_cleanup_push] (3thr)  - install and remove cleanup handlers
+pthread_cond_broadcast [pthread_cond_init] (3thr)  - operations on conditions
+pthread_cond_destroy [pthread_cond_init] (3thr)  - operations on conditions
+pthread_cond_init    (3thr)  - operations on conditions
+pthread_cond_signal [pthread_cond_init] (3thr)  - operations on conditions
+pthread_cond_timedwait [pthread_cond_init] (3thr)  - operations on conditions
+pthread_cond_wait [pthread_cond_init] (3thr)  - operations on conditions
+pthread_condattr_destroy [pthread_condattr_init] (3thr)  - condition creation attributes
+pthread_condattr_init (3thr)  - condition creation attributes
+pthread_create       (3thr)  - create a new thread
+pthread_detach       (3thr)  - put a running thread in the detached state
+pthread_equal        (3thr)  - compare two thread identifiers
+pthread_exit         (3thr)  - terminate the calling thread
+pthread_getschedparam [pthread_setschedparam] (3thr)  - control thread scheduling parameters
+pthread_getspecific [pthread_key_create] (3thr)  - management of thread-specific data
+pthread_join         (3thr)  - wait for termination of another thread
+pthread_key_create   (3thr)  - management of thread-specific data
+pthread_key_delete [pthread_key_create] (3thr)  - management of thread-specific data
+pthread_kill [pthread_sigmask] (3thr)  - handling of signals in threads
+pthread_kill_other_threads_np (3thr)  - terminate all threads in program except calling thread
+pthread_mutex_destroy [pthread_mutex_init] (3thr)  - operations on mutexes
+pthread_mutex_init   (3thr)  - operations on mutexes
+pthread_mutex_lock [pthread_mutex_init] (3thr)  - operations on mutexes
+pthread_mutex_trylock [pthread_mutex_init] (3thr)  - operations on mutexes
+pthread_mutex_unlock [pthread_mutex_init] (3thr)  - operations on mutexes
+pthread_mutexattr_destroy [pthread_mutexattr_init] (3thr)  - mutex creation attributes
+pthread_mutexattr_getkind_np [pthread_mutexattr_init] (3thr)  - mutex creation attributes
+pthread_mutexattr_init (3thr)  - mutex creation attributes
+pthread_mutexattr_setkind_np [pthread_mutexattr_init] (3thr)  - mutex creation attributes
+pthread_once         (3thr)  - once-only initialization
+pthread_self         (3thr)  - return identifier of current thread
+pthread_setcancelstate [pthread_cancel] (3thr)  - thread cancellation
+pthread_setcanceltype [pthread_cancel] (3thr)  - thread cancellation
+pthread_setschedparam (3thr)  - control thread scheduling parameters
+pthread_setspecific [pthread_key_create] (3thr)  - management of thread-specific data
+pthread_sigmask      (3thr)  - handling of signals in threads
+pthread_testcancel [pthread_cancel] (3thr)  - thread cancellation
+sigwait [pthread_sigmask] (3thr)  - handling of signals in threads
+</font></pre>
+
+<!-- notes --><hr>
+<p>For this course, you do not need to learn to use all of these
+functions, so they are not explained here.  If you want to read
+more about them you can use the <i>man</i> command to read the
+on-line manual pages about them.</p>
+<!-- /notes -->
+
+<h3>Compiling and Running Programs with Pthreads</h3>
+
+<p>To link a program using POSIX threads you may need to specify
+the POSIX threads library, via the compilation/linkage
+parameter <i>-lpthread</i>.</p>
+
+<p>To link a program using the <i>sched_yield()</i> function on
+Solaris you may need to specify
+the real-time library, via the compilation/linkage
+parameter <i>-lrt</i>.</p>
+
+<!-- notes --><hr>
+<p>To avoid forgetting to include such linkage directives
+when you compile programs it is helpful to construct a
+makefile and specify the inclusion of
+<i>-lpthread</i> as part of a default
+compilation rule.</p>
+<!-- /notes -->
+
+<h3>Review of Thread Pitfalls</h3>
+
+<ul>
+<li>unprotected shared variables</li>
+<li>stack overflow</li>
+<li>waiting on CV without a loop</li>
+<li>forgetting to unlock a mutex</li>
+<li>using a mutex as a CV</li>
+<li>using a CV without the matching mutex</li>
+<li>thread confusion in debugger</li>
+<li>failure to detach or join threads</li>
+<li>mixing signals with threads</li>
+</ul>
+
+<!-- notes --><hr>
+<p>When you program with threads, be especially wary of the
+following:</p>
+<ul>
+
+<li>Variables that are accessed by more than one
+thread.  If you have no mutual exclusion mechanism in place to
+protect them you probably have a problem.</li>
+
+<li>Variables that are accessed by more than one
+thread and not.  If you have no mutual exclusion mechanism in place to
+protect them you have a problem.</li>
+
+<li>Thread stack overflow.  A process with
+multiple threads needs multiple execution stacks, one per thread.
+A bounded area of memory is allocated for each.  If this overflows
+the program will generally crash with a <i>SIGSEGV</i> or
+<i>SIGBUS</i>.  To reduce the chance of stack overflow,
+avoid recursion and declarations of large array variables within threads
+or functions called by threads.</li>
+
+<li>Calls to <i>pthread_cond_wait()</i> that are not
+in a loop that checks a state variable.  Calls outside of such
+loops are erroneous because of the possibility of spurious
+wakeups.
+
+</li><li>Unmatched <i>pthread_mutex_lock</i> and
+<i>pthread_mutex_unlock</i> calls.  Failure to unlock a mutex
+leads to deadlock.  To make it easy to match up calls, try to
+keep your critical sections short.  This also will make your
+code more efficient for concurrent execution.</li>
+
+<li>Confusion between appropriate uses of
+a mutex and a condition variable.  
+<em>Never</em> use a mutex to wait for an event
+or condition.
+Use a mutex to
+protect access to a shared variable.  Use a condition variable
+to wait for an event or condition.
+</li>
+
+<li>Calls to <i>pthread_cond_wait()</i>
+outside of critical sections.  A thread must be holding
+a mutex to call <i>pthread_cond_wait()</i>.  A good way
+keep this straight is to remember that a condition variable
+is a shared variable.</li>
+
+<li>Unmatched calls to <i>pthread_mutex_lock()</i> and
+<i>pthread_mutex_unlock</i>.  Failure to unlock a mutex leads to
+deadlock.  To make it easy to match up calls, try to keep your
+critical sections short.  This also will make your code more efficient
+for concurrent execution.</li>
+
+<li>Problems if you try using a debugger, such as 
+<i>gdb</i>.  Beware that the interleaving effects of thread
+execution are likely to confuse you and/or the debugger.  (Similar
+problems arise with signal handlers.)</li>
+
+<li>Remember to either create your threads as detached, or arrange
+to collect them after termination with <i>pthread_join</i>.</li>
+
+<li>It is wise to avoid mixing the use of signals with the
+use of threads in an application.
+The semantic interactions between the thread operations and the
+signal operations are subtle.  Moreover, the present implementation
+of signals with threads for Linux does not conform to the Unix/POSIX
+specification.  This is a consequence of the Linux thread
+implementation treating threads more like processes.  In particular,
+some signal
+operations that should affect the entire process -- like <i>sigaction()</i>
+and <i>sigprocmask()</i> only affect one thread.</li>
+</ul>
+
+<!-- /notes -->
+
+<h3><a name="volatile">Volatile Variables</a></h3>
+
+<ul>
+<li>"<code>volatile int X;</code>"
+tells compiler not to optimize away load or store operations:</li>
+<li><code>X:=1; ... Y:= X; ... X:= 0;</code> <i>versus</i>
+    <code>... Y:= 1; ... X:= 0;</code></li>
+<li>important if variable is accessed by more than one thread</li>
+</ul>
+
+<!-- notes --><hr>
+
+<p>This example deals with a situation that should not arise
+if you are programming with threads using the mutex and condition
+variable API for mutual exclusion and synchronization.
+It illustrates some of the pitfalls that you can expect if you
+try to "roll your own" solutions to these problems.</p>
+
+<p>Compilers try to "optimize" the code they generate, to make it run
+faster.  Some of these optimizations are not correct if the code
+contains references to shared variables, which might be accessed
+concurrently by other threads.  For example, suppose the source code
+of a program contains a loop like the following:</p>
+
+<!-- /notes -->
+
+<h3>Busy-Wait Loop</h3>
+
+<code>X = 1; while (X);</code><br>
+<i>versus</i><br>
+<code>while (1);</code>
+
+<!-- notes --><hr>
+
+<p>Observe that this kind of code might be used by a naive programmer
+to implement a "busy wait" operation, where the current thread is waiting
+for another thread to change the value of <i>X</i> to 0.
+
+</p><p>Test-compiling this code with no optimizations using the <i>gcc</i>
+compiler with no optimizations we obtain the following Intel x86 
+assembly language output:</p>
+
+<!-- /notes -->
+
+<h3>Busy-Wait Loop Code: no optimization</h3>
+
+<pre>	movl	$1, X
+	.p2align 2
+.L3:
+	cmpl	$0, X
+	jne	.L3</pre>
+
+<!-- notes --><hr>
+
+<p>Observe that his code has the desired effect, since the value
+of <i>X</i> is re-fetched every time around the loop.
+
+<!-- /notes -->
+
+</p><p>Test-compiling this code using the <i>gcc</i>
+compiler with optimization <i>-O2</i> we obtain the following
+assembly language output:</p>
+
+<h3>Busy-Wait Loop Code: with optimization, no volatile</h3>
+
+<pre>	movl	$1, X
+	movl	$1, %eax
+	.p2align 2
+.L5:
+	testl	%eax, %eax
+	jne	.L5</pre>
+
+<!-- notes -->
+
+<p>Observe that in this second version the value of <i>X</i> has
+been loaded into a register <i>eax</i>, which cannot change during
+the loop.  Thus, the code does not have the desired effect.</p>
+
+<p>The problem is that the compiler writer reasoned that the variable
+<i>X</i> was "loop invariant".  That is, its value would not change
+during the loop. That would ordinarily be correct in a single-threaded
+application.  It is only wrong because we are accessing the variable
+<i>X</i> from more than one thread.</p>
+
+<p>With the variable <i>X</i> declared <i>volatile</i> and
+optimization level <kbd>-02</kbd> we get the following:
+
+<!-- /notes -->
+
+</p><h3>Busy-Wait Loop Code: with optimization &amp; volatile</h3>
+
+<pre>	movl	$1, X
+	.p2align 2
+.L5:
+	movl	X, %eax
+	testl	%eax, %eax
+	jne	.L5</pre>
+
+<!-- notes --><hr>
+
+<p>Observe that this code works as originally intended.</p>
+
+<p>When a programmer plans to access a variable from more than one
+thread it is the programmer's responsibility to tell the compiler
+about this, using the attribute <i>volatile</i>, or by calling
+synchronization operations like the mutex lock/unlock operations
+between accesses by different threads.  In the latter case, the
+synchronization operations (besides their main purpose, of
+providing mutual exclusion between threads) have the side-effect
+of preventing the compiler from doing optimizations of the kind
+described here across calls.</p>
+
+<!-- /notes -->
+
+<h3><a name="end">For Further Reading</a></h3>
+<ul>
+
+<li><a href="http://www.math.arizona.edu/swig/pthreads/threads.html">
+POSIX Threads Tutorial</a>  (Mark Hays)</li>
+</ul>
+
+<!-- notes --><hr>
+<p>At the time this was written, if you looked for
+tutorials on POSIX threads with a Web search engine you would quickly
+find several good ones, including the two mentioned above.</p>
+<!-- /notes -->
+
+
+<table width="100%"><tbody><tr><td bgcolor="cccc99">
+<font size="1"><a href="http://www.cs.fsu.edu/%7Ebaker">T. P. Baker</a> ($Id$)
+</font></td></tr></tbody></table>
+
+
+
+</body></html>

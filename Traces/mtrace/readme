@@ -1,0 +1,4 @@
+gcc -g mtrace.c -o t_mtrace                =====================>> compiling the sourcecode 
+./t_mtrace                                 =====================>> excute the program
+mtrace ./t_mtrace $MALLOC_TRACE            =====================>> trace the memory leaking of the program
+

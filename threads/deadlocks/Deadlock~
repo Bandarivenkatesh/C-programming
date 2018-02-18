@@ -1,0 +1,1 @@
+Deadlock — A state where two or more threads each hold a lock that the others need to finish.

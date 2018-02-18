@@ -1,0 +1,2 @@
+   gcc -g leack.c
+   valgrind --leak-check=yes ./a.out

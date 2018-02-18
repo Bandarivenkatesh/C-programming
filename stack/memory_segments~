@@ -1,0 +1,28 @@
+
+
+
+    Local variables and function frame - stack
+
+    Global and static variables if uninitialized - .bss block start by symbol
+
+    Global and static variables if initialized - data segment
+
+    Environment variables and arguments - on top of the stack
+
+    Dynamic data allocation - heap
+
+    Const - ROM
+
+    Volatile - no storage
+
+    Register - cpu register
+
+    Const volatile - in the same place as const storage
+
+
+
+  heap (growing up) 
+  ...
+  stack (growing down)
+
+

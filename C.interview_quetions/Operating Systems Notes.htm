@@ -1,0 +1,409 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+
+<title>Operating Systems Notes</title>
+
+
+
+</head>
+<body bodylink="blue" cols="*" vlink="#0000FF" link="#0000FF" background="Operating%20Systems%20Notes_files/Bck2.gif" alink="#FF0000"> <!--  Body and text color -->
+
+
+<h2 align="center"><img src="Operating%20Systems%20Notes_files/redline.gif" width="640" height="2"></h2>
+
+
+<h2 align="center">Threads</h2>
+
+
+<p align="center"><img src="Operating%20Systems%20Notes_files/redline.gif" width="640" height="2"></p>
+
+
+<p align="center">&nbsp;</p>
+
+
+<p></p>
+
+
+<p></p>
+
+
+<ul>
+  <li>Threads</li>
+  <li>Processes Vs Threads</li>
+  <li>Why Threads?</li>
+  <li>User-Level Threads</li>
+  <li>Kernel-Level Threads</li>
+  <li>Advantages of Threads over Multiple Processes</li>
+  <li>Disadvantages of Threads over Multiprocesses</li>
+  <li>Application that Benefits from Threads</li>
+  <li>Application that cannot benefit from Threads</li>
+  <li>Resources used in Thread creation and Process Creation</li>
+  <li>Context Switch</li>
+  <li>Major Steps of Context Switching</li>
+  <li>Action of Kernel to Context switch among threads</li>
+  <li>Action of kernel to Context switch among processes</li>
+</ul>
+<p>&nbsp;</p>
+
+<h3 align="left">Threads</h3>
+
+
+<p>Despite of the fact that a thread must execute in process, the process and 
+its associated threads are different concept. Processes are used to group 
+resources together and threads are the entities scheduled for execution on the 
+CPU.<br>
+<i>A thread is a single sequence stream 
+within in a process</i>. Because threads have some of the properties of processes, 
+they are sometimes called <i>lightweight processes</i>. In a process, threads allow 
+multiple executions of streams. In many respect, threads are popular way to improve 
+application through parallelism. The CPU switches rapidly back and forth among 
+the threads giving illusion that the threads are running in parallel. Like a 
+traditional process i.e., process with one thread, a thread can be in any of 
+several states (Running, Blocked, Ready or Terminated). Each thread has its own 
+stack. Since thread will generally call different procedures and thus a 
+different execution history. This is why thread needs its own stack. An operating system that has thread facility, 
+the basic unit of CPU utilization is a thread. A thread has or consists of a program counter (PC), a register set, and 
+a stack space. Threads are not independent of one other like processes as a 
+result threads shares with other threads their code section, data section, OS 
+resources&nbsp; also known as task, such as open files and signals.</p>
+
+
+<h3 align="left">Processes Vs Threads</h3>
+<p>As we mentioned earlier that in many respect threads operate in the same way 
+as that of processes. Some of the similarities and differences are:</p>
+<p><b>Similarities</b></p>
+<ul>
+  <li>Like processes threads share CPU and only one thread active (running) at a 
+  time. </li>
+  <li>Like processes, threads within a processes, threads within a processes 
+  execute sequentially. </li>
+  <li>Like processes, thread can create children. </li>
+  <li>And like process, if one thread is blocked, another thread can run. </li>
+</ul>
+<p><b>Differences</b></p>
+<ul>
+  <li>Unlike processes, threads are not independent of one another. </li>
+  <li>Unlike processes, all threads can access every address in the task . </li>
+  <li>Unlike processes, thread are design to assist one other. Note that 
+  processes might or might not assist one another because processes may 
+  originate from different users. </li>
+</ul>
+<p>&nbsp;</p>
+<h3 align="left">Why Threads?</h3>
+<p>Following are some reasons why we use threads in designing operating systems.</p>
+<ol>
+  <li>A process with multiple threads make a great server for example printer 
+  server. </li>
+  <li>Because threads can share common data, they do not need to use 
+  interprocess communication. </li>
+  <li>Because of the very nature, threads can take advantage of multiprocessors.
+  </li>
+</ol>
+<p>Threads are cheap in the sense that</p>
+<ol>
+  <li>They only need a stack and storage for registers therefore, threads are 
+  cheap to create. </li>
+  <li>Threads use very little resources of an operating system in which they are 
+  working. That is, threads do not need new address space, global data, program 
+  code or operating system resources. </li>
+  <li>Context switching are fast when working with threads. The reason is that 
+  we only have to save and/or restore PC, SP and registers. </li>
+</ol>
+<p>But this cheapness does not come free - the biggest drawback is that there is 
+no protection between threads.</p>
+<h3 align="left">User-Level Threads</h3>
+<p>User-level threads implement in user-level libraries, rather than via systems 
+calls, so thread switching does not need to call operating system and to cause 
+interrupt to the kernel. In fact, the kernel knows nothing about user-level 
+threads and manages them as if they were single-threaded processes.</p>
+<p><b>Advantages:</b></p>
+<p>The most obvious advantage of this technique is that a user-level threads 
+package can be implemented on an Operating System that does not support threads. 
+Some other advantages are</p>
+<ul>
+  <li>User-level threads does not require modification to operating systems.
+  </li>
+  <li>Simple Representation: <br>
+  &nbsp;&nbsp;&nbsp; Each thread is represented simply by a PC, registers, stack and a small 
+  control block, all stored in the user process address space. </li>
+  <li>Simple Management: <br>
+  &nbsp;&nbsp;&nbsp; This simply means that creating a thread, switching between threads and 
+  synchronization between threads can all be done without intervention of the 
+  kernel. </li>
+  <li>Fast and Efficient:<br>
+  &nbsp;&nbsp;&nbsp; Thread switching is not much more expensive than a procedure call. </li>
+</ul>
+<p><b>Disadvantages:</b></p>
+<ul>
+  <li>There is a lack of coordination between threads and operating system 
+  kernel. Therefore, process as whole gets one time slice irrespect of whether 
+  process has one thread or 1000 threads within. It is up to each thread to 
+  relinquish control to other threads. </li>
+  <li>User-level threads requires non-blocking systems call i.e., a 
+  multithreaded kernel. Otherwise, entire process will blocked in the kernel, 
+  even if there are runable threads left in the processes. For example, if one 
+  thread causes a page fault, the process blocks. </li>
+</ul>
+<p>&nbsp;</p>
+<h3 align="left">Kernel-Level Threads</h3>
+<p>In this method, the kernel knows about and manages the threads. No runtime 
+system is needed in this case. Instead of thread table in each process, the 
+kernel has a thread table that keeps track of all threads in the system. In 
+addition, the kernel also maintains the traditional process table to keep track 
+of processes. Operating Systems kernel provides system call to create and manage threads.<br>
+<br>
+The implementation of general structure of kernel-level thread is <br>
+&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+&lt;DIAGRAM&gt;</p>
+<p><b>Advantages:</b></p>
+<ul>
+  <li>Because kernel has full knowledge of all threads, Scheduler may decide to 
+  give more time to a process having large number of threads than process having 
+  small number of threads. </li>
+  <li>Kernel-level threads are especially good for applications that frequently 
+  block. </li>
+</ul>
+<p><b>Disadvantages:</b></p>
+<ul>
+  <li>The kernel-level threads are slow and inefficient. For instance, threads 
+  operations are hundreds of times slower than that of user-level threads. </li>
+  <li>Since kernel must manage and schedule threads as well as processes. It 
+  require a full thread control block (TCB) for each thread to maintain 
+  information about threads. As a result there is significant overhead and 
+  increased in kernel complexity. </li>
+</ul>
+
+
+<p>&nbsp;</p>
+
+<h3>Advantages of Threads over Multiple Processes</h3>
+
+<ul>
+    <li> <b>Context Switching</b>&nbsp;&nbsp;&nbsp; Threads are very inexpensive to 
+create and destroy, and they are inexpensive to represent. For example, they 
+require space to store, the PC, the SP, and the general-purpose registers, but 
+they do not require space to share memory information, Information about open 
+files of I/O devices in use, etc. With so little context, it is much faster to 
+switch between threads. In other words, it is relatively easier for a context 
+switch using threads.</li>
+    <li> <b>Sharing</b>&nbsp;&nbsp;&nbsp; Treads allow the sharing of a lot resources 
+that cannot be shared in process, for example, sharing code section, data 
+section, Operating System resources like open file etc.</li>
+    </ul>
+    <h3></h3>
+
+
+
+
+
+<h3>Disadvantages of Threads over Multiprocesses</h3>
+
+
+
+
+
+    <ul>
+      <li> <b>Blocking </b>&nbsp;&nbsp;&nbsp;
+The major disadvantage if that if the kernel is single threaded, a system call 
+of one thread will block the whole process and CPU may be idle during the 
+blocking period.</li>
+      <li> <b>Security</b>&nbsp;&nbsp;&nbsp;
+Since there is, an extensive sharing among threads there is a potential problem 
+of security. It is quite possible that one thread over writes the stack of 
+another thread (or damaged shared data) although it is very unlikely since 
+threads are meant to cooperate on a single task.</li>
+    </ul>
+
+
+
+
+
+<h3>Application that Benefits from Threads</h3>
+
+
+
+
+
+<p>A proxy server satisfying the requests for a number of computers on a LAN would 
+be benefited by a multi-threaded process. In general, any program that has to do 
+more than one task at a time could benefit from multitasking. For example, a 
+program that reads input, process it, and outputs could have three threads, one 
+for each task.</p>
+
+
+
+
+
+<h3>Application that cannot Benefit from Threads</h3>
+
+
+
+
+
+<p>Any sequential process that cannot be divided into parallel task will not 
+benefit from thread, as they would block until the previous one completes. For 
+example, a program that displays the time of the day would not benefit from 
+multiple threads.</p>
+
+
+
+
+
+<h3>Resources used in Thread Creation and Process Creation</h3>
+
+
+
+
+
+<p align="center">
+<img src="Operating%20Systems%20Notes_files/threadCreation.gif" width="231" height="170" border="0"></p>
+
+
+
+
+
+<p>When a new thread is created it shares its code section, data section and 
+operating system resources like open files with other threads. But it is 
+allocated its own stack, register set and a program counter.</p>
+
+
+
+
+
+<p>The creation of a new process differs from that of a thread mainly in the 
+fact that all the shared resources of a thread are needed explicitly for each 
+process. So though two processes may be running the same piece of code they need 
+to have their own copy of the code in the main memory to be able to run. Two 
+processes also do not share other resources with each other. This makes the 
+creation of a new process very costly compared to that of a new thread.</p>
+
+
+
+
+
+<h3>Context Switch</h3>
+
+
+
+
+
+<p>To give each process on a multiprogrammed machine a fair share of the CPU, a 
+hardware clock generates interrupts periodically. This allows the operating 
+system to schedule all processes in main memory (using scheduling algorithm) to 
+run on the CPU at equal intervals. Each time a clock interrupt occurs, the 
+interrupt handler checks how much time the current running process has used. If 
+it has used up its entire time slice, then the CPU scheduling algorithm (in 
+kernel) picks a different process to run. Each switch of the CPU from one 
+process to another is called a context switch.</p>
+
+
+
+
+
+<h3>Major Steps of Context Switching</h3>
+
+
+
+
+
+    <ul>
+      <li>The values of the CPU registers are saved in the process table of the process 
+that was running just before the clock interrupt occurred.</li>
+      <li>The registers are loaded from the process picked by the CPU scheduler to run 
+next.</li></ul>
+
+<p>In a multiprogrammed uniprocessor computing system, context switches occur 
+frequently enough that all processes appear to be running concurrently.
+If a process has more than one thread, the Operating System can use the context 
+switching technique to schedule the threads so they appear to execute in 
+parallel. This is the case if threads are implemented at the kernel level. 
+Threads can also be implemented entirely at the user level in run-time 
+libraries. Since in this case no thread scheduling is provided by the Operating 
+System, it is the responsibility of the programmer to yield the CPU frequently 
+enough in each thread so all threads in the process can make progress. </p>
+    
+
+
+
+
+
+<h3>Action of Kernel to Context Switch Among Threads</h3>
+
+
+
+
+
+<p>The threads share a lot of resources with other peer threads belonging to the 
+same process. So a context switch among threads for the same process is easy. It 
+involves switch of register set, the program counter and the stack. It is 
+relatively easy for the kernel to accomplished this task.</p>
+
+
+
+
+
+<h3>Action of kernel to Context Switch Among Processes</h3>
+
+
+
+
+
+<p>Context switches among processes are expensive. Before a process can be 
+switched its process control block (PCB) must be saved by the operating system. 
+The PCB consists of the following information:</p>
+
+
+
+
+
+<ul>
+  <li>The process state.</li>
+  <li>The program counter, PC.</li>
+  <li>The values of the different registers.</li>
+  <li>The CPU scheduling information for the process.</li>
+  <li>Memory management information regarding the process.</li>
+  <li>Possible accounting information for this process.</li>
+  <li>I/O status information of the process.</li>
+</ul>
+
+
+
+
+
+<p>When the PCB of the currently executing process is saved the operating system 
+loads the PCB of the next process that has to be run on CPU. This is a heavy 
+task and it takes a lot of time.<br>
+<br>
+&nbsp;</p>
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+<center>
+
+
+<p><img src="Operating%20Systems%20Notes_files/redline.gif" width="640" height="2"></p>
+
+
+
+
+
+<p>
+<a href="http://www.personal.kent.edu/%7Ermuhamma/OpSystems/os.html">
+<img src="Operating%20Systems%20Notes_files/back.gif" width="49" height="47" border="0"></a></p>
+
+</center>
+
+
+
+
+</body></html>

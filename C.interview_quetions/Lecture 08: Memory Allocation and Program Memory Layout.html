@@ -1,0 +1,876 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<!-- 2016-01-05 Tue 08:39 -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecture 08: Memory Allocation and Program Memory Layout</title>
+<meta name="generator" content="Org-mode">
+<meta name="author" content="Adam Aviv">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="Lecture%2008:%20Memory%20Allocation%20and%20Program%20Memory%20Layout_files/class.css">
+</head><body><h1>IC221: Systems Programming (SP15)</h1>
+<hr> <a href="https://www.usna.edu/Users/cs/aviv/classes/ic221/s16/index.html">Home</a> <a href="https://www.usna.edu/Users/cs/aviv/classes/ic221/s16/policy.html">Policy</a> <a href="https://www.usna.edu/Users/cs/aviv/classes/ic221/s16/cal.html">Calendar</a> <a href="https://www.usna.edu/Users/cs/aviv/classes/ic221/s16/resources.html">Resources</a> <hr>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+
+<div id="content">
+<h1 class="title">Lecture 08: Memory Allocation and Program Memory Layout</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">1. Memory Model</a></li>
+<li><a href="#orgheadline3">2. Local Memory Allocation on the Stack</a>
+<ul>
+<li><a href="#orgheadline2">2.1. The Stack</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline6">3. Global Memory Allocation on the Heap</a>
+<ul>
+<li><a href="#orgheadline4">3.1. The heap, <code>malloc()</code> and <code>free()</code></a></li>
+<li><a href="#orgheadline5">3.2. Memory Leaks  and other Memory Violations</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline9">4. Program Layout: Stack vs. Heap</a>
+<ul>
+<li><a href="#orgheadline7">4.1. Memory Mapping and Dynamic Libraries</a></li>
+<li><a href="#orgheadline8">4.2. Address Space Randomization</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> Memory Model</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+So far in programming C, we haven't given a lot of thought to the
+variables we declare and what it actually means to declare a
+variable of a given type. Recall that in C the notion of a type and
+the amount of memory to store that type are strongly linked. For the
+basic types we've looked at so far, here are their memory
+requirements:
+</p>
+
+<ul class="org-ul">
+<li><code>int</code> : integer number : 4-bytes</li>
+<li><code>short</code> : integer number : 2-bytes</li>
+<li><code>long</code> : integer number : 8-bytes</li>
+<li><code>char</code> : character : 1-byte</li>
+<li><code>float</code> : floating point number : 4-bytes</li>
+<li><code>double</code> : floating point number : 8-bytes</li>
+<li><code>void *</code> : pointers : 8-bytes on (64 bit machines)</li>
+</ul>
+
+<p>
+But, what does it mean for a type to require memory, and where does
+that memory come from and how is it managed? Understanding the
+memory model in C is vital to becoming a good programmer because
+there are situations where you have to use complex memory management
+to write effective programs. Simple mistakes can lead to programs
+with mysterious bugs that fail in inexplicable ways.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3"><span class="section-number-2">2</span> Local Memory Allocation on the Stack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+When you declare a variable, you are actually stating to C that you
+need to create space for the data of that variable to
+exist. Consider a very simple example.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c"><span style="color: #98fb98;">int</span> <span style="color: #eedd82;">a</span> = 10;
+</pre>
+</div>
+
+<p>
+The declaration of the integer <code>a</code> will allocate memory for the
+storage for an integer (4-bytes). We refer to the data stored in
+memory via the variable <code>a</code>. 
+</p>
+
+<p>
+<b>Memory allocation</b> refers to the process by which the program makes
+"space" for the storage of data. When you declare a variable of a
+type, enough memory is allocation locally to store data of that
+type. The allocation is local, occurring within the scope of the
+function, and when that function returns the memory is
+<b>deallocated</b>. This should be intuitive based on your experience
+with programming so far, you can't referenced a variable outside the
+scope of your function.
+</p>
+
+<p>
+However with pointers in C, it's easy to make mistakes where your
+pointer references a memory address out of scope of the current
+function or even completely unallocated memory. As an example of a
+common mistake, consider the simple program below which has a
+function <code>plus()</code> which adds two numbers and returns a memory
+address for the result value.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c"><span id="coderef-plus" class="coderef-off"><span style="color: #98fb98;">int</span> * <span style="color: #87cefa;">plus</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">a</span>, <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">b</span>){</span>
+<span id="coderef-c_declare" class="coderef-off">  <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">c</span> = a + b;</span>
+<span id="coderef-c_returned" class="coderef-off">  <span style="color: #00ffff;">return</span> &amp;c;    <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">return a reference to</span></span>
+                <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">locally declared c</span>
+}
+
+<span style="color: #98fb98;">int</span> <span style="color: #87cefa;">main</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">argc</span>, <span style="color: #98fb98;">char</span> * <span style="color: #eedd82;">argv</span>[]){
+<span id="coderef-assign" class="coderef-off">  <span style="color: #98fb98;">int</span> * <span style="color: #eedd82;">p</span> = plus(1,2);</span>
+<span id="coderef-bad_ref" class="coderef-off">  printf(<span style="color: #ffa07a;">"%d\n"</span>,*p); <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">dereference return value</span></span>
+                     <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">to print an integer </span>
+}
+</pre>
+</div>
+<p>
+The function <a href="#coderef-plus" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-plus');" onmouseout="CodeHighlightOff(this, 'coderef-plus');">plus</a> is declared to take two integers as arguments and
+return a pointer to an integer. Within the body of the function, the
+two integers are summed together, and the result in stored in <code>c</code>, a
+variable <a href="#coderef-c_declare" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-c_declare');" onmouseout="CodeHighlightOff(this, 'coderef-c_declare');">declared locally</a> within the context of the function. The
+function then <a href="#coderef-c_returned" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-c_returned');" onmouseout="CodeHighlightOff(this, 'coderef-c_returned');">returns the memory address</a> of <code>c</code>, which is assigned
+to the pointer value <code>p</code> in <a href="#coderef-assign" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-assign');" onmouseout="CodeHighlightOff(this, 'coderef-assign');">main</a>. 
+</p>
+
+<p>
+What's the problem? The memory of <code>c</code> is deallocated once the
+function returns, and now <code>p</code> is referencing a memory address which
+is unallocated. The <a href="#coderef-bad_ref" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bad_ref');" onmouseout="CodeHighlightOff(this, 'coderef-bad_ref');">print statement</a>, which deferences <code>p</code>,
+following the pointer to the memory address, may fail. The above
+code is <b>bad</b>, and you can also follow the reasoning with a stack
+diagram.
+</p>
+
+<pre class="example">            plus(1,2)         return &amp;c            printf("%d\n",*p)
+             
+(main)         |  (main)         |  (main)            |  (main)
+.---.----.     |  .---.----.     |  .---.----.        |  .---.----.
+| p |  .-+-X   |  | p |  .-+-X   |  | p |  .-+---.    |  | p |  .-+---.
+'---'----'     |  '---'----'     |  '---'----'   |    |  '---'----'   |
+               | -------------   | ------------  |    |               |
+               |  (plus)         |  (plus)       |    |               |
+               |  .---.---.      |  .---.---.    |    |               |
+               |  | a | 1 |      |  | a | 1 |    |    |               |
+               |  |---|---|      |  |---|---|    |    |               |
+               |  | b | 2 |      |  | b | 2 |    |    |               |
+               |  |---|---|      |  |---|---|    |    |               |
+               |  | c | 3 |      |  | c | 3 | &lt;--'    |            X--'
+               |  '---'---'      |  '-------'
+                
+                c exists locally    returning a reference       When p is dereferenced
+                in plus()           to c assined to p           it points to unallocated memory
+</pre>
+
+<p>
+First, in <code>main()</code>, p waits for the result of the call to <code>plus()</code>,
+which set's <code>c</code>. Once <code>plus()</code> returns, the value of <code>p</code> references
+a variable declared in <code>plus()</code>, but all locally declared variables
+in <code>plus()</code> are deallocated once <code>plus()</code> returns. That means, by
+the time the <code>printf()</code> is called and <code>p</code> is dereferenced, the
+memory address references unallocated memory, and we cannot
+guarantee that the data at that memory address will be what we
+expect.
+</p>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2"><span class="section-number-3">2.1</span> The Stack</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Another term for local memory allocation is <b>stack allocation</b>
+because the way programs track execution across functions is based
+on a stack. A <b>stack</b> is a standard ordred data structure, like a
+list, that has the property that the <i>last item</i> inserted on the
+stack is the <i>first item</i> that is removed. This is often referred
+to as LIFO data structure, last-in-first-out.  A stack has two
+primary functions:
+</p>
+
+<ul class="org-ul">
+<li><b>push</b> : push an item on to the top of the stack</li>
+<li><b>pop</b>  : pop an item off the top of the stack</li>
+</ul>
+
+<p>
+The stack's <b>top</b> always references the last item pushed onto the
+stack, and the items below the top are ordered base on when they
+were pushed on. The most recently pushed items come first. This
+means when you pop items off the top stack, the next item becomes the
+next top, which maintains the LIFO principle. 
+</p>
+
+<p>
+The stack model (last-in-first-out) matches closely the model of
+function calls and returns during program execution. The act of
+calling a function is the same as <i>pushing</i> the called function
+execution onto the top of the stack, and, once that function
+completes, the results are returned <i>popping</i> the function off the
+stack.
+</p>
+
+<p>
+Each function is contained within a structure on the stack called a
+<b>stack frame</b>. A stack frame contains all the allocated memory from
+variable deliberations as well as a pointer to the execution point
+of the calling function, the so called <b>return pointer</b>. A very
+common exploit in computer security is a buffer overflow attack
+where an attacker overwrite the return pointer such that when the
+function returns, code chosen by the attacker is executed. 
+</p>
+
+<p>
+To understand how function calls are modeled in the stack, we have
+nested function calls under <code>addonetwo()</code>, and which ever function
+is currently executing has the stack frame at the top of the stack
+and the calling function, where to the current function returns, is
+the stack frame next from top. When the current function returns,
+its stack frame is popped off the stack, and the calling function,
+now the top of the stack, continues executing from the point of
+function call.
+</p>
+
+<div class="side-by-side">
+<div class="side-by-side-a">
+<div class="org-src-container">
+
+<pre class="src src-c"><span style="color: #98fb98;">int</span> <span style="color: #87cefa;">gettwo</span>(){
+   <span style="color: #00ffff;">return</span> 2;
+} 
+
+<span style="color: #98fb98;">int</span> <span style="color: #87cefa;">getone</span>(){
+  <span style="color: #00ffff;">return</span> 1;
+}
+
+<span style="color: #98fb98;">int</span> <span style="color: #87cefa;">addonetwo</span>(){
+  <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">one</span> = getone();
+  <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">two</span> = gettwo();
+  <span style="color: #00ffff;">return</span> one+two;
+}
+
+<span style="color: #98fb98;">int</span> <span style="color: #87cefa;">main</span>(){
+  <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">a</span> = func2();
+
+}
+</pre>
+</div>
+</div>
+<div class="side-by-side-b">
+<pre class="example">            program executed     .------ top of stack
+                                 v
+                main()
+push main         |      |     main()     |
+                  |      '----------------' 
+
+              addonetwo()
+                  |
+push addonetwo    |      |   addonetwo()  |
+                  |      |     main()     |
+                  |      '----------------'
+
+               getone()
+                  |
+                  |      |     getone()   |
+push getone       |      |   addonetwo()  |
+                  |      |     main()     |
+                  |      '----------------'
+
+               return 1
+pop               |      |   addonetwo()  |
+                  |      |     main()     |
+                  |      '----------------'
+
+               gettwo()
+                  |
+                  |      |     gettwo()   |
+push gettwo       |      |   addonetwo()  |
+                  |      |     main()     |
+                  |      '----------------'
+
+               return 2
+pop               |      |   addonetwo()  |
+                  |      |     main()     |
+                  |      '----------------'
+
+           return  1 + 2 
+pop               |      |     main()     |
+                  |      '----------------'
+
+             program exits
+</pre>
+
+
+</div></div>
+
+
+<p>
+The act of pushing and popping functions onto the stack also
+affects the memory allocation. By <i>pushing</i> a function onto the
+stack, the computer is actually allocating memory for the
+function's local variables, and once that function returns, the
+function and its allocated memory is <i>popped</i> off the stack,
+deallocating it. This is why local declared variables are also
+called <b>stacked variables</b>. 
+</p>
+
+<p>
+Following the example from before we can now better understand why
+it fails by adding in the pushes and pops of the stack. 
+</p>
+
+
+<pre class="example">            *PUSH*            *POP*
+
+            plus(1,2)         return &amp;c            printf("%d\n",*p)
+             
+(main)         |  (main)         |  (main)            |  (main)
+.---.----.     |  .---.----.     |  .---.----.        |  .---.----.
+| p |  .-+-X   |  | p |  .-+-X   |  | p |  .-+---.    |  | p |  .-+---.
+'---'----'     |  '---'----'     |  '---'----'   |    |  '---'----'   |
+               | -------------   | ------------  |    |               |
+               |  (plus)         |  (plus)       |    |               |
+               |  .---.---.      |  .---.---.    |    |               |
+               |  | a | 1 |      |  | a | 1 |    |    |               |
+               |  |---|---|      |  |---|---|    |    |               |
+               |  | b | 2 |      |  | b | 2 |    |    |               |
+               |  |---|---|      |  |---|---|    |    |               |
+               |  | c | 3 |      |  | c | 3 | &lt;--'    |            X--'
+               |  '---'---'      |  '-------'
+                
+             Pusing plus()           The return of plus()      When p is dereferenced          
+             onto the stack          pops it off the stack     in the print, p now 
+             allocates memory        unallocated all stack     references unallocated
+             for c                   variables including c     memory
+</pre>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+<div id="outline-container-orgheadline6" class="outline-2">
+<h2 id="orgheadline6"><span class="section-number-2">3</span> Global Memory Allocation on the Heap</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Just because the sample program with <code>plus()</code> from the previous
+section doesn't work properly when returning a memory reference, it
+does not mean you cannot write functions that return a memory
+reference. What is needed is a different allocation procedure for
+global memory which is not deallocated automatically when functions
+return and thus remains in scope for the entirety of the program
+execution.
+</p>
+
+<p>
+In fact, you have already seen how to do this in C++ when you using
+the <code>new</code> construct. When you call <b>new</b> for some structure, what
+is actually going on? Consider the small code snippet below:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #98fb98;">Node</span> * <span style="color: #eedd82;">node</span> = <span style="color: #00ffff;">new</span> <span style="color: #98fb98;">Node</span>();
+</pre>
+</div>
+
+<p>
+The local variable declaration is for the variable <code>node</code>, but
+that's just a pointer to some memory. The variable <code>node</code>, itself,
+is declared on the stack and has enough memory to store a memory
+address. The value of that memory address is set by the return of
+the call <code>new Node()</code>. The <code>new</code> function will automatically
+allocate enough memory to store a <code>Node</code> structure and the <code>node</code>
+variable now references that memory. But, where does this new
+memory come from?
+</p>
+
+<p>
+If you think about it, the memory cannot have been allocated on the
+stack because it is memory being returned from a function, the
+<code>new</code> function. As we've seen previously, if a function returns a
+local reference of a variable declared on the stack, that memory is
+automatically deallocated when the function returns. Instead, this
+memory must have been allocated somewhere else, and it is. The
+<code>new</code> function performs a dynamic memory allocation in global
+memory that is not associated with scope of functions or the
+stack. It is instead allocating on the <b>heap</b>. 
+</p>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4"><span class="section-number-3">3.1</span> The heap, <code>malloc()</code> and <code>free()</code></h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+The global memory region for a program is called the <b>heap</b>, which
+is a fragmented data structure where new allocation try and fit
+within unallocated regions. Whenever a program needs to allocate
+memory globally or in a dynamic way, that memory is allocated on
+the heap, which is shared across the entire program irrespective of
+function calls.
+</p>
+
+<p>
+In C the <code>new</code> function is called <code>malloc()</code>, or memory
+allocator. The <code>malloc()</code> function takes the number of bytes to be
+allocated as its argument, and it returns a pointer to a memory
+region on the heap of the requested byte-size. Here is a code
+snippet to allocate memory to store an integer on the heap:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c"><span style="color: #ff7f24;">//                           </span><span style="color: #ff7f24;">.--- Allocate sizeof(int) number of bytes </span>
+<span style="color: #ff7f24;">//                           </span><span style="color: #ff7f24;">v</span>
+ <span style="color: #98fb98;">int</span> * <span style="color: #eedd82;">p</span> = (<span style="color: #98fb98;">int</span> *) malloc(<span style="color: #00ffff;">sizeof</span>(<span style="color: #98fb98;">int</span>));
+<span style="color: #ff7f24;">//            </span><span style="color: #ff7f24;">^</span>
+<span style="color: #ff7f24;">//            </span><span style="color: #ff7f24;">'-- Cast to a integer pointer</span>
+</pre>
+</div>
+<p>
+First, to allocate an integer on the heap, we have to know how
+<b>big</b> an integer is, that is, what size is it, which we learn via
+<code>sizeof()</code> macro. Since an <code>int</code> is 4 byes in size, <code>malloc()</code> will
+allocate 4 bytes of memory on the heap in which an integer can be
+stored. <code>malloc()</code> then returns the memory address of the newly
+allocated memory, which is assigned to <code>p</code>. Since <code>malloc()</code> is a
+general purpose allocation tool, just allocating bytes which can be
+used to store data generally, we have to cast the resulting pointer
+value to the right type, <code>int *</code>. If we don't, the program won't
+fail, but you will get a compiler warning.
+</p>
+
+<p>
+We can now use <code>p</code> like a standard pointer as before; however, once
+we're done with <code>p</code> we have to explicitly deallocate it. Unlike
+stack based memory allocations which are implicitly deallocated
+when functions return, there is no way for C to know when you are
+done using memory allocated on the heap. C does not track
+references, like Java, so it can't perform garbage collection;
+instead, you, the programmer, must indicate when you're done with
+the memory by <i>freeing</i>. The deallocation function is <code>free()</code>
+(equivalent to <code>delete</code> in C++), which takes a pointer value as
+input and "frees" the referenced memory on the heap. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c"><span style="color: #98fb98;">int</span> * <span style="color: #eedd82;">p</span> = (<span style="color: #98fb98;">int</span> *) malloc(<span style="color: #00ffff;">sizeof</span>(<span style="color: #98fb98;">int</span>));
+
+<span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">do something with p</span>
+
+free(p); <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">&lt;-- deallocate p</span>
+</pre>
+</div>
+
+
+<p>
+With all of that, we can now complete the <code>plus()</code> program to
+properly return a memory reference to the result. 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c"><span style="color: #98fb98;">int</span> * <span style="color: #87cefa;">plus</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">a</span>, <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">b</span>){ 
+  <span style="color: #98fb98;">int</span> *<span style="color: #eedd82;">p</span> = (<span style="color: #98fb98;">int</span> *) malloc(<span style="color: #00ffff;">sizeof</span>(<span style="color: #98fb98;">int</span>)); <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">allocate enough space for </span>
+  *p = a + b;                   <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">for an integer</span>
+  <span style="color: #00ffff;">return</span> p;  <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">return pointer</span>
+
+}
+
+<span style="color: #98fb98;">int</span> <span style="color: #87cefa;">main</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">argc</span>, <span style="color: #98fb98;">char</span> * <span style="color: #eedd82;">argv</span>[]){
+  <span style="color: #98fb98;">int</span> * <span style="color: #eedd82;">p</span> = plus(1,2); <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">p now references memory on the heap</span>
+  printf(<span style="color: #ffa07a;">"%d\n"</span>,*p); 
+  free(p); <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">free allocated memory</span>
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5"><span class="section-number-3">3.2</span> Memory Leaks  and other Memory Violations</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+In C (and C++), the programer is responsible for memory management,
+which includes both the allocation and deallocation of memory. As a
+result, there are many mistakes that can be made, which is natural
+considering that all programers make mistakes. Perhaps the most
+common mistake is a memory leak, where heap allocated memory is not
+freed. Consider the following program.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c"><span style="color: #98fb98;">int</span> <span style="color: #87cefa;">main</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">argc</span>, <span style="color: #98fb98;">char</span> * <span style="color: #eedd82;">argv</span>[]){
+  <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">i</span>, * <span style="color: #eedd82;">p</span>;
+
+  <span style="color: #00ffff;">for</span>(i=0;i&gt;100;i++){
+<span id="coderef-memlost" class="coderef-off">    p = (<span style="color: #98fb98;">int</span> *) malloc(<span style="color: #00ffff;">sizeof</span>(<span style="color: #98fb98;">int</span>));</span>
+    *p = i;
+  }
+
+}
+</pre>
+</div>
+<p>
+At the malloc, on <a href="#coderef-memlost" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-memlost');" onmouseout="CodeHighlightOff(this, 'coderef-memlost');">Line 5</a>, the returned pointer to newly
+allocated memory is overwriting the previous value of <code>p</code>. There is
+no <code>free()</code> occuring, and once the previous pointer value is
+overwritten, there is no way to free that memory. It is considered
+<i>lost</i>, and the above program has a memory leak.  Memory leaks are
+very bad, and over time, can cause your program to fail.
+</p>
+
+<p>
+Another common mistake is dereferencing a <b>dangling pointer</b>. A
+dangling poiner is when a pointer value once referenced allocated
+memory, but that memory has seen been dealocated. We'e seen an
+example of this already in the <code>plus()</code> program, but it can also
+occur for heap allocations.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c"><span style="color: #98fb98;">int</span> <span style="color: #87cefa;">main</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">argc</span>, <span style="color: #98fb98;">char</span> * <span style="color: #eedd82;">argv</span>[]){
+  <span style="color: #98fb98;">int</span> *<span style="color: #eedd82;">p</span> = (<span style="color: #98fb98;">int</span> *) malloc(<span style="color: #00ffff;">sizeof</span>(<span style="color: #98fb98;">int</span>));
+  <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">... code</span>
+  free(p);
+  <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">... code  </span>
+  *p = 10;
+}
+</pre>
+</div>
+
+<p>
+Once <code>p</code> has been freed, the memory referenced by the <code>p</code>'s value
+can be reclaimed by other allocations. At the point where <code>p</code> is
+dereferenced for the assignment, it might be the case that you are
+actually overwriting memory for some other value, and corrupting
+your program. Once memory is freed, it should never be
+dereferenced. These kinds of memory violations can lead to the
+dreaded <code>SEGFAULT</code>.
+</p>
+
+<p>
+Another, common mistake with memory allocation is a <b>double
+free</b>. The heap allocation functions maintain special data
+structures so that it is easy to find unallocated memory and
+reallocate for future <code>malloc()</code> calls. If you call <code>free()</code> twice
+on a pointer, you will corrupt that process, result in a <code>core
+   dump</code> or some other very scary error.
+</p>
+</div>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-orgheadline9" class="outline-2">
+<h2 id="orgheadline9"><span class="section-number-2">4</span> Program Layout: Stack vs. Heap</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Now that you understand the two different memory allocation
+procedures, let's zoom out and take a larger look at how memory in
+programs is managed more generally. Where is the stack? Where is the
+heap? How do they grow or shrink?
+</p>
+
+<p>
+To answer these questions, you first need to think of a program as a
+memory profile. All information about a program, including the
+actual binary code and variables all are within the memory layout of
+a program. When executing, the Operating System will manage that
+memory layout, and a snapshot of that memory and the current
+execution point basically defines a program. This allows the
+operating system to swap in and out programs as needed.
+</p>
+
+<p>
+On 64-bit machines, the total available memory addresses are from 0
+to 2<sup>64</sup>-1. For a program, the top and bottom of the address space
+are what is important. We can look at the program's memory layout in
+diagram form:
+</p>
+
+<pre class="example">     2^64-1---&gt;  .----------------------.
+High Addresses   |      Enviroment      |
+                 |----------------------|
+                 |                      |   Functions and variable are declared
+                 |         STACK        |   on the stack.
+base pointer -&gt;  | - - - - - - - - - - -|
+                 |           |          |
+                 |           v          |
+                 :                      :
+                 .                      .   The stack grows down into unused space
+                 .         Empty        .   while the heap grows up. 
+                 .                      .
+                 .                      .   (other memory maps do occur here, such 
+                 .                      .    as dynamic libraries, and different memory
+                 :                      :    alloocat)
+                 |           ^          |
+                 |           |          |
+ break point -&gt;  | - - - - - - - - - - -|   Dynamic memory is declared on the heap
+                 |          HEAP        |
+                 |                      |
+                 |----------------------|
+                 |          BSS         |   The compiled binary code is down here as
+                 |----------------------|   well as static and initialzed data
+                 |          Data        |
+                 |----------------------|
+Low Addresses    |          Text        |
+      0 -----&gt;   '----------------------'  
+</pre>
+
+
+
+<p>
+At the higher addresses is the stack and at the lower address is the
+heap. The two memory allocation regions grow into the middle of the
+address space, which is unused and unallocated. In this way, the two
+allocations will not interfere with each other.  The stack <b>base
+pointer</b> is the current top of the stack, and as functions are
+called and returned, it will shift appropriately. The <b>break point</b>
+refers to the top of the programs data segment, which contains the
+heap. As the heap fills up, requirement more space, the break is set
+to higher addresses. 
+</p>
+
+<p>
+You should note that this memory layout is <b>virtual</b>. From the
+program's perspective it has access to the entire address range, but
+in reality, this might not be the case because the program is
+sharing <b>physical memory</b> with other programs, including the
+operating system. How that process works is a discussion for another
+class.
+</p>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7"><span class="section-number-3">4.1</span> Memory Mapping and Dynamic Libraries</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Between the break point and the base pointer is unallocated memory,
+but it may not be unused. This region can be memory mapped, which is
+the process of loading data directly from files into memory. As the
+programmer, you can directly memory map files, but often this is
+done automatically for you when you read and write files.
+</p>
+
+<p>
+Another common use for the middle addresses is the loading of
+dynamic shared libraries. When you make a call to a function like
+<code>printf()</code> or <code>malloc()</code>, the code for those functions exist in
+shared libraries, the standard C library, to be precise. Your
+program must run that code, but the operating system doesn't want to
+have load more code into memory than needed. Instead, the O.S. loads
+shared libraries dynamically, and when it does so, it maps the
+necessary code into the middle address spaces.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8"><span class="section-number-3">4.2</span> Address Space Randomization</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+A final note about program memory address is that it is not
+consistent across runs. Take a look at the very simple program:
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-c"><span style="color: #ff7f24;">/*</span><span style="color: #ff7f24;">random.c</span><span style="color: #ff7f24;">*/</span>
+<span style="color: #b0c4de;">#include</span> <span style="color: #ffa07a;">&lt;stdio.h&gt;</span>
+<span style="color: #b0c4de;">#include</span> <span style="color: #ffa07a;">&lt;stdlib.h&gt;</span>
+
+<span style="color: #98fb98;">int</span> <span style="color: #87cefa;">main</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">argc</span>, <span style="color: #98fb98;">char</span> * <span style="color: #eedd82;">argv</span>[]){
+  <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">a</span>;
+  printf(<span style="color: #ffa07a;">"0x%p\n"</span>,&amp;a); <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">print the address of a                                                                                                                        </span>
+}
+</pre>
+</div>
+
+<p>
+All this program does is print the address of the statically
+declared variable <code>a</code>. With your knowledge of the memory address
+layout, you could probably say with confidence that the address
+value should be a relatively large number, but you might also
+expect that it would be consistent across runs of the program. 
+</p>
+
+<pre class="example">#&gt; for i in `seq 1 1 10`; do ./random; done
+0x0x7fff58e0cafc
+0x0x7fff50fffafc
+0x0x7fff59a6dafc
+0x0x7fff508c3afc
+0x0x7fff533c8afc
+0x0x7fff539a9afc
+0x0x7fff528c6afc
+0x0x7fff50984afc
+0x0x7fff52f13afc
+0x0x7fff5c97aafc
+</pre>
+
+
+<p>
+In fact, it is not consistent. While the addresses are relatively
+high in the address space, there least significant bits are quite
+random. This is on purpose, and for security purposes. The stack
+values also contain important pointers to next bit of code that
+should be executed, this is how program knows how to return to the
+previous execution prior to the function call. In a buffer overflow
+attack, the attacker overwrites the return pointer allowing code to
+be executed of the attacker's choosing, which can be exploit
+code. In order for the attack to be successful, the attacker must
+know exactly where in the program to set the return pointer, but if
+the addresses are randomized, this because a much more difficult
+tasks. Which is why the address space is randomized. 
+</p>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

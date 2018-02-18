@@ -1,0 +1,306 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><style>
+    @font-face {
+        font-family: 'AlwynNewRd';
+        src: url('https://s.hcurvecdn.com/fonts/AlwynNewRd-Rg.otf');
+    }
+</style> 
+<style type="text/css">
+
+	#box{
+		width: 300px;
+		height: 250px;
+		position: absolute;
+		overflow: hidden;
+		left:0px;
+		top:0px;
+		font-family: "AlwynNewRd";
+		user-select: none;
+		border:.1px solid;
+		cursor: pointer
+	}
+	.background{
+		width: 300px;
+		height: 250px;
+		position: absolute;
+		background-image: url("https://s.hcurvecdn.com/bigboss/BB11_300x250_v2.png");
+		background-size: cover;
+		overflow: hidden;
+    	background-position: center;
+    	background-repeat: no-repeat;
+    	/*background-color: #f7f900;*/
+	}
+	a{
+	    text-decoration: none;
+	}
+	
+	.list-item{
+		position: relative;
+		width: 100%;
+		display: inline-block;
+		background: white;
+		height: 169.3px;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	}
+	.img{
+		height:155px;
+		width:auto;
+		background-size: cover;
+    	background-position: center;
+    	background-repeat: no-repeat;
+    	text-align: center;
+	}
+	.heading{
+		font-size: 10px;
+		background: #fcc7d4;
+		width: 100%;
+		text-align: left;
+		padding-top: 0px;
+		font-weight:500;
+		color: black;
+		letter-spacing: .3px
+	}
+	
+	.item-name{
+		width: 165px;
+		font-size: 14px;
+		text-align: left;
+		padding: 2px 0px 0px 0px;
+		height: 35px;
+		display: -webkit-box;
+        margin: 2px auto;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        color: white;
+        font-weight: 500;
+	}
+	
+	.grid {
+	    flex:1;
+	    display:flex;
+	    justify-content:space-between;
+	    flex-direction:column;
+	}
+</style>
+</head><body>
+<div id="template" style="display:none">
+	<div class="background" style="z-index:100;pointer-events:none"> </div>
+	<div gdn-repeat="items" rows="1" cols="1" class="grid" style="margin:0px;">
+    	<div class="list-item" onclick="openUrl(event,'$(self_url)')" style="height:250px">
+		  <div style="position:relative;margin-top:42px">
+			<div class="img" style="z-index:1000;background-image:url($(self_image))"></div>
+			<div class="item-name" style="z-index:100;left:8px;text-align:left;position:absolute;top:163px">$(self_heading)</div>
+		  </div>
+		</div>
+		
+	</div>
+		<div style="pointer-events:none;font-size:22px;z-index:100;top:7px;position:absolute;text-align:right;width:190px;left:95px;color:white">Bigg Boss 11</div>
+		
+		<div style="pointer-events:none;font-size:12px;z-index:100;bottom:18px;position:absolute;text-align:center;width:95px;height:14px;background-color:#ff254b;right:18px;color:white">Must Watch Now</div>
+
+
+</div>
+<div id="box">
+	<div class="background" style="z-index:100;pointer-events:none"> </div>
+	<div gdn-repeat="items" rows="1" cols="1" class="grid" style="margin:0px;"><div style="display:flex;justify-content:space-between">
+    	<div class="list-item" onclick="openUrl(event,'https://www.voot.com/shows/bigg-boss-s11/11/538936/day-33-vikas-runs-away-/546098')" style="height:250px">
+		  <div style="position:relative;margin-top:42px">
+			<div class="img" style="z-index:1000;background-image:url(https://viacom18-res.cloudinary.com/image/upload/f_auto,q_auto:eco,fl_lossy,w_480,h_270/dimg2/voot-cms/include/upload/web-v2-images/series/playlistMedias_3_0_image_1509771790.jpg)"></div>
+			<div class="item-name" style="z-index:100;left:8px;text-align:left;position:absolute;top:163px">Reality check for Priyank</div>
+		  </div>
+		</div>
+		
+	</div></div>
+		<div style="pointer-events:none;font-size:22px;z-index:100;top:7px;position:absolute;text-align:right;width:190px;left:95px;color:white">Bigg Boss 11</div>
+		
+		<div style="pointer-events:none;font-size:12px;z-index:100;bottom:18px;position:absolute;text-align:center;width:95px;height:14px;background-color:#ff254b;right:18px;color:white">Must Watch Now</div>
+
+
+</div>
+
+<script type="text/javascript">
+    
+    var _items = [{
+        image:'https://viacom18-res.cloudinary.com/image/upload/f_auto,q_auto:eco,fl_lossy,w_480,h_270/dimg2/voot-cms/include/upload/web-v2-images/series/individualMedias_1_0_image_1509774237.jpg',
+        url:'https://www.voot.com/shows/bigg-boss-s11/11/538936/day-33-vikas-runs-away-/546013',
+        heading: 'Day 33: Vikas runs away?'
+    },{
+        image:'https://viacom18-res.cloudinary.com/image/upload/f_auto,q_auto:eco,fl_lossy,w_480,h_270/dimg2/voot-cms/include/upload/web-v2-images/series/playlistMedias_1_0_image_1509771758.jpg',
+        url:'https://www.voot.com/shows/bigg-boss-s11/11/538936/day-33-vikas-runs-away-/546100',
+        heading: 'Prepping for Weekend Ka Vaar!'
+    },{
+        image:'https://viacom18-res.cloudinary.com/image/upload/f_auto,q_auto:eco,fl_lossy,w_480,h_270/dimg2/voot-cms/include/upload/web-v2-images/series/playlistMedias_1_1_image_1509771759.jpg',
+        url:'https://www.voot.com/shows/bigg-boss-s11/11/538936/day-33-vikas-runs-away-/545916',
+        heading: 'Hiten&#39s new name, TE-JAWANI!'
+    },{
+        image:'https://viacom18-res.cloudinary.com/image/upload/f_auto,q_auto:eco,fl_lossy,w_480,h_270/dimg2/voot-cms/include/upload/web-v2-images/series/playlistMedias_2_0_image_1509774277.jpg',
+        url:'https://www.voot.com/shows/bigg-boss-s11/11/538936/day-33-vikas-runs-away-/546096',
+        heading: 'Shilpa&#39s bad experiences'
+    },{
+       image:'https://viacom18-res.cloudinary.com/image/upload/f_auto,q_auto:eco,fl_lossy,w_480,h_270/dimg2/voot-cms/include/upload/web-v2-images/series/playlistMedias_3_0_image_1509771790.jpg',
+        url:'https://www.voot.com/shows/bigg-boss-s11/11/538936/day-33-vikas-runs-away-/546098',
+        heading: 'Reality check for Priyank'
+    },{
+        image:'https://viacom18-res.cloudinary.com/image/upload/f_auto,q_auto:eco,fl_lossy,w_480,h_270/dimg2/voot-cms/include/upload/web-v2-images/series/playlistMedias_3_1_image_1509771791.jpg',
+        url:'https://www.voot.com/shows/bigg-boss-s11/11/538936/day-33-vikas-runs-away-/546015',
+        heading: 'Puneesh, a coward?'
+    },{
+        image:'https://viacom18-res.cloudinary.com/image/upload/f_auto,q_auto:eco,fl_lossy,w_480,h_270/dimg2/voot-cms/include/upload/web-v2-images/series/playlistMedias_4_0_image_1509771831.jpg',
+        url:'https://www.voot.com/shows/bigg-boss-s11/11/538936/day-33-vikas-runs-away-/546075',
+        heading: 'Shilpa torments Vikas!'
+    },{
+        image:'https://viacom18-res.cloudinary.com/image/upload/f_auto,q_auto:eco,fl_lossy,w_480,h_270/dimg2/voot-cms/include/upload/web-v2-images/series/playlistMedias_4_1_image_1509771832.jpg',
+        url:'https://www.voot.com/shows/bigg-boss-s11/11/538936/day-33-vikas-runs-away-/546097',
+        heading: 'Who&#39s the new captain?'
+    }]
+    var json = {"adtag":"2872bc0f","bcamp":"notset","browser":"notset","btag":"notset","campaign":"none","cid":"1893","click_macro":"https://googleads.g.doubleclick.net/dbm/clk?sa=L\u0026ai=CuO4wkpT-WcnaGI_MuQSAm774C5qRrdxNtf_J0IcG8C4QASCigdcLYOXK5YO0DqABodiDkQPIAQmpApYrnW6JolA-qAMBqgS7AU_QlLmMeJdnhNBNHR-gsy6DnBSuz2eF7ghJMGEIUMdsXOM99fZyccKkakpp-PqkRn5DbWrEJz2TPXuGt7Q8aRqxYJndwxjGb9cBePmdbQq6IP8-qGnamDzqguDIsJcy0X80GcGa4HzqoEsZ8oUdu60vQmVGB_qZcG0eqHAM-qKGVjLjcaVyjdIv-KV5BgRNld2iUrfUzEhs5Ibmk05iS5cUb9pKzOqCcvYYSCpVP-jeaepMh2tAzihkElXgBAOQBgGgBk2AB8en_G6oB6a-G9gHANIIBwiAYRABGALIE7TOnwLYEwM\u0026num=1\u0026cid=CAASEuRo-bVY_CE-KMOXV7dtvPwvlA\u0026sig=AOD64_1y8QPvloYB9DemO5cgA2sUs56M6A\u0026client=ca-pub-8090601437064582\u0026dbm_c=AKAmf-DbE_TIexUAVu-J4dW_dPepytmRS0YGHlIYOTIcuo5eRXBY2HqaZhHHyOlI3zQYw0Kr4HOb\u0026dbm_d=AKAmf-CUUJ2cG0OgpD5k3-yn0DWlj_8sy5NQ3aqv6TpdJVInyPvpsVq2qUWZBfg2czU0wj9eG4-QVk49TtbvgUHX6eD1V-oRzL64mRLgrULW2fuJJVQ2q-4LpFJZJmLhUHC7CaUJsk-Iyah9YOr-G-8NeG8HCwoxLqcchTNj4Arh5Nmn1w--_wkuOqteRhY80KdZhgWBzkxdItu_WHWpWjGSKz7H0o5-Pw\u0026adurl=","client":"voot","creativedata":"{}","device":"desktop","dimension":"300x250","domain":"notset","fcat":"content","hcid":"pretargeting","partner":"dbm","pdata":"{}","stats":"eyJhZHRhZyI6IjI4NzJiYzBmIiwiYmNhbXAiOiJub3RzZXQiLCJicm93c2VyIjoibm90c2V0IiwiYnRhZyI6Im5vdHNldCIsImNhbXBhaWduIjoibm9uZSIsImNpZCI6IjE4OTMiLCJjbGllbnQiOiJ2b290IiwiZGV2aWNlIjoiZGVza3RvcCIsImRpbWVuc2lvbiI6IjMwMHgyNTAiLCJkb21haW4iOiJub3RzZXQiLCJmY2F0IjoiY29udGVudCIsImhjaWQiOiJwcmV0YXJnZXRpbmciLCJwYXJ0bmVyIjoiZGJtIiwidG9rZW5faWQiOiJmNTVhYWY3YTUyMjhkYjNiOGNlNmRiNWE4ZjNlOGFiMiJ9","token_id":"f55aaf7a5228db3b8ce6db5a8f3e8ab2","udata":"{}"};
+    function shuffle(array) {
+      if(!array.length) return [];
+      var currentIndex = array.length, temporaryValue, randomIndex;
+      while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
+    }
+    Number.prototype.formatMoney = function(c, d, t){
+    var n = this, 
+        c = isNaN(c = Math.abs(c)) ? 2 : c, 
+        d = d == undefined ? "." : d, 
+        t = t == undefined ? "," : t, 
+        s = n < 0 ? "-" : "", 
+        i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+        j = (j = i.length) > 3 ? j % 3 : 0;
+       return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "").replace(".00","");
+     };
+    var listitems = ""
+    var creativedata = [];
+    try{
+        var creativedata = shuffle(JSON.parse(json['pdata'].replace(",]","]")))
+    }catch(e){
+        creativedata = [];
+    }
+    var staticdata = shuffle(_items);
+    for(var i=0;i<staticdata.length;i++){
+        creativedata.push(staticdata[i])
+    }
+    var finaldata = []
+    for(var i=0;i<creativedata.length;i++){
+        finaldata.push(creativedata[i])
+    }
+    creativedata = finaldata;
+    function format(str,data){
+  return str.replace(/\$\([^\)]*\)/g,function(m,n){
+    var key = m.substr(2,m.length-3)
+    return data[key]==undefined? m : data[key]
+  })
+}
+
+
+window.onAdData = function(data){
+  var template = document.getElementById("template")
+  var box = document.getElementById("box")
+  box.innerHTML = template.innerHTML
+  var repeats = document.querySelectorAll("#box [gdn-repeat]");
+  console.log(repeats)
+  for(var i=0;i<repeats.length;i++){
+    var repeat = repeats[i];
+    var key = repeat.getAttribute("gdn-repeat")
+    var template = repeat.innerHTML;
+    var nrows = repeat.getAttribute("rows")
+    var ncols = repeat.getAttribute("cols")
+    if(data[key]){
+      var html = ""
+      for(var r=0;r<nrows;r++){
+          var row = ""
+          for(var c=0;c<ncols;c++){
+            var obj = {}
+            var index = (r*ncols+c)%data[key].length
+            for(var k in data[key][index]){
+              obj["self_"+k] = data[key][index][k];
+            }
+            row += format(template,obj)
+          }
+          html += `<div style='display:flex;justify-content:space-between'>`+row+`</div>`
+      }
+      repeat.innerHTML = html
+    }
+  }
+  box.innerHTML = format(box.innerHTML,data)
+}
+onAdData({items:creativedata})
+
+function openUrl(e,url){
+    e.preventDefault()
+    e.stopPropagation()
+    // url = url.split("?")[0]
+    if(url.indexOf('utm_source')==-1){
+        var token = "?"
+        if(url.indexOf('?')!=-1) token='&';
+        url += token+"utm_source=dbm&utm_medium=cpm&utm_campaign=hockeycurve_bigboss11_desktop"
+    }
+    if(window.location.href.indexOf('=mobile')!=-1){
+        url = url.replace('_desktop','_mobile')
+    }
+    var target = json['click_macro'];
+    if(target){
+        url = "https://ad.hockeycurve.com/clk.php?redirect="+encodeURIComponent(url)+"&tracking="+encodeURIComponent(target)+"&stats="+encodeURIComponent(json['stats'])+"&token_id="+encodeURIComponent(json['token_id']);
+    }
+    window.open(url,"_blank")
+}
+ window.onclick = function(event){
+     console.log(event)
+     openUrl(event,"https://www.voot.com/shows/bigg-boss/bigg-boss-season-11")
+}
+var count = 0
+function anim(){
+    count += 1
+    if (count > 30)return;
+    var first = creativedata[0]
+    creativedata = creativedata.slice(1,creativedata.length)
+    creativedata.push(first)
+    onAdData({items:creativedata})
+    setTimeout(anim,3000)
+}
+anim()
+
+var trigger_iframe = function(src){
+    try{
+        var body = document.getElementsByTagName('body')[0];
+        var iframe = document.createElement('iframe');
+        iframe.src = src;
+        iframe.style['display'] = 'none'
+        body.appendChild(iframe);
+    }
+    catch(e){exception(e)}
+}
+var ishover = false;
+var triggered = false;
+function triggerHover(){
+    if(ishover && !triggered && json['click_macro']){
+        triggered = true;
+        trigger_iframe("piggyback?redirect=hcid&token_id="+json["token_id"]);
+        trigger_iframe("hover?redirect=hcid&stats="+json["stats"]+"&token_id="+json["token_id"]);
+    }
+}
+window.addEventListener("mouseover",function(){
+    if(!ishover){
+        ishover = true;
+        setTimeout(triggerHover,2000)
+    }
+})
+window.addEventListener("mouseout",function(){
+    ishover = false;
+})
+
+</script>
+<a target="_blank" href="http://hockeycurve.com/optout.html"><div style="font-size:10px;position:absolute;right:0px;top:0px;z-index:10000;cursor:pointer;">
+    <img src="ad_data/logo.png" title="optout">
+</div></a>
+</body></html>

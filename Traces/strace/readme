@@ -1,0 +1,3 @@
+gcc strace.c        ===========>> compile the soucecode 
+strace -c ./a.out   ===========>> read and count the number of systemcalls  are calling in this programm if you want see the this cammand $man strace
+

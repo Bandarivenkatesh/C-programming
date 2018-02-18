@@ -1,0 +1,641 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>
+	C programming solved programs/examples with solutions - C source Codes
+</title><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!-- css files -->
+    <meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/W3.css"><link rel="stylesheet" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/styleR.css"><link rel="stylesheet" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/font-awesome.css">
+    <!-- Google CSE css-->    
+    <style type="text/css">
+        input.gsc-input, .gsc-input-box, .gsc-input-box-hover, .gsc-input-box-focus, .gsc-search-button 
+        {
+          box-sizing: content-box;
+          line-height: normal;
+        }
+    </style>
+    <!--End of Google CSE css-->
+
+    <script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/async-ads.js"></script><script src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/ca-pub-8685817763351539.js"></script><script type="text/javascript" async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/cse.js"></script><script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/analytics.js"></script><script src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        // Used to toggle the menu on small screens when clicking on the menu button
+        function myFunction() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+    </script>
+
+<!-- ####################### Google Analytics Code ####################-->
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-63414109-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+<!-- ####################### Google Analytics Code ####################-->
+
+    
+    
+    <meta name="keywords" content="c programs, c solved programs, c programming examples, solved examples in c language, c language programs, c programs with solutions, c program  list, list of important c programs">
+    <meta name="description" content="C programming solved programs/examples  - This page contains solved c programs on all C topics, top searched c programs, reader on demand c programs all programs have explanation, output.">
+
+<link rel="preload" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/integrator.js"><script type="text/javascript" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/integrator.js"></script><link rel="preload" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/integrator_002.js"><script type="text/javascript" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/integrator_002.js"></script><script src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/embed.js" data-timestamp="1512113519543"></script><script src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/jsapi" type="text/javascript"></script><link type="text/css" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/defaulten.css" rel="stylesheet"><link type="text/css" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/default.css" rel="stylesheet"><script type="text/javascript" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/defaulten.js"></script><style type="text/css">
+</style><style type="text/css">.gscb_a{display:inline-block;font:27px/13px arial,sans-serif}.gsst_a .gscb_a{color:#a1b9ed;cursor:pointer}.gsst_a:hover .gscb_a,.gsst_a:focus .gscb_a{color:#36c}.gsst_a{display:inline-block}.gsst_a{cursor:pointer;padding:0 4px}.gsst_a:hover{text-decoration:none!important}.gsst_b{font-size:16px;padding:0 2px;position:relative;user-select:none;-moz-user-select:none;white-space:nowrap}.gsst_e{opacity:0.55;}.gsst_a:hover .gsst_e,.gsst_a:focus .gsst_e{opacity:0.72;}.gsst_a:active .gsst_e{opacity:1;}.gsst_f{background:white;text-align:left}.gsst_g{background-color:white;border:1px solid #ccc;border-top-color:#d9d9d9;box-shadow:0 2px 4px rgba(0,0,0,0.2);-moz-box-shadow:0 2px 4px rgba(0,0,0,0.2);margin:-1px -3px;padding:0 6px}.gsst_h{background-color:white;height:1px;margin-bottom:-1px;position:relative;top:-1px}.gsib_a{width:100%;padding:4px 6px 0}.gsib_a,.gsib_b{vertical-align:top}.gssb_c{border:0;position:absolute;z-index:989}.gssb_e{border:1px solid #ccc;border-top-color:#d9d9d9;box-shadow:0 2px 4px rgba(0,0,0,0.2);-moz-box-shadow:0 2px 4px rgba(0,0,0,0.2);cursor:default}.gssb_f{visibility:hidden;white-space:nowrap}.gssb_k{border:0;display:block;position:absolute;top:0;z-index:988}.gsdd_a{border:none!important}.gsq_a{padding:0}.gsq_a{padding:0}.gscsep_a{display:none}.gssb_a{padding:0 7px}.gssb_a,.gssb_a td{white-space:nowrap;overflow:hidden;line-height:22px}#gssb_b{font-size:11px;color:#36c;text-decoration:none}#gssb_b:hover{font-size:11px;color:#36c;text-decoration:underline}.gssb_g{text-align:center;padding:8px 0 7px;position:relative}.gssb_h{font-size:15px;height:28px;margin:0.2em}.gssb_i{background:#eee}.gss_ifl{visibility:hidden;padding-left:5px}.gssb_i .gss_ifl{visibility:visible}a.gssb_j{font-size:13px;color:#36c;text-decoration:none;line-height:100%}a.gssb_j:hover{text-decoration:underline}.gssb_l{height:1px;background-color:#e5e5e5}.gssb_m{color:#000;background:#fff}.gsfe_a{border:1px solid #b9b9b9;border-top-color:#a0a0a0;box-shadow:inset 0px 1px 2px rgba(0,0,0,0.1);-moz-box-shadow:inset 0px 1px 2px rgba(0,0,0,0.1);-webkit-box-shadow:inset 0px 1px 2px rgba(0,0,0,0.1);}.gsfe_b{border:1px solid #4d90fe;outline:none;box-shadow:inset 0px 1px 2px rgba(0,0,0,0.3);-moz-box-shadow:inset 0px 1px 2px rgba(0,0,0,0.3);-webkit-box-shadow:inset 0px 1px 2px rgba(0,0,0,0.3);}.gssb_a{padding:0 9px}.gsib_a{padding-right:8px;padding-left:8px}.gsst_a{padding-top:5.5px}.gssb_e{border:0}.gssb_l{margin:5px 0}input.gsc-input::-webkit-input-placeholder{font-size:14px}input.gsc-input:-moz-placeholder{font-size:14px}input.gsc-input::-moz-placeholder{font-size:14px}input.gsc-input:-ms-input-placeholder{font-size:14px}input.gsc-input:focus::-webkit-input-placeholder{color:transparent}input.gsc-input:focus:-moz-placeholder{color:transparent}input.gsc-input:focus::-moz-placeholder{color:transparent}input.gsc-input:focus:-ms-input-placeholder{color:transparent}.gssb_c .gsc-completion-container{position:static}.gssb_c{z-index:5000}.gsc-completion-container table{background:transparent;font-size:inherit;font-family:inherit}.gssb_c > tbody > tr,.gssb_c > tbody > tr > td,.gssb_d,.gssb_d > tbody > tr,.gssb_d > tbody > tr > td,.gssb_e,.gssb_e > tbody > tr,.gssb_e > tbody > tr > td{padding:0;margin:0;border:0}.gssb_a table,.gssb_a table tr,.gssb_a table tr td{padding:0;margin:0;border:0}</style><link rel="prefetch" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/a_data/lounge.css"><link rel="prefetch" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/a_data/common.js"><link rel="prefetch" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/a_data/lounge_002.js"><link rel="prefetch" href="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/a_data/config.js"></head>
+<body>
+
+
+    <!--Header control-->
+    
+<!-- Navbar -->
+<div class="i3-menu">
+    <ul class="w3-navbar w3-card-2 w3-left-align i3-menuColor">
+        <li class="w3-hide-medium w3-hide-large w3-opennav w3-right">
+            <a class="w3-padding" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+        </li>
+        <li><a id="ctl00_header_cntrl1_rMenuHome" class="w3-padding" href="http://www.includehelp.com/"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
+        <li class="w3-hide-small"><a id="ctl00_header_cntrl1_rMenuCLan" class="w3-padding" href="http://www.includehelp.com/c">C</a></li>
+        <li class="w3-hide-small"><a id="ctl00_header_cntrl1_rMenuCppL" class="w3-padding" href="http://www.includehelp.com/cpp-tutorial">C++</a></li>
+        <li class="w3-hide-small w3-dropdown-hover">
+            <a href="javascript:void(0)" class="w3-hover-none w3-padding" title="More">More <i class="fa fa-caret-down"></i></a>     
+            <div class="w3-dropdown-content w3-white w3-card-4 i3-sub-menu">
+                <a id="ctl00_header_cntrl1_subMJav" href="http://www.includehelp.com/java/">Java</a>
+                <a id="ctl00_header_cntrl1_subMDST" href="http://www.includehelp.com/data-structure-tutorial">Data Structure</a>
+                <a id="ctl00_header_cntrl1_subMLOS" href="http://www.includehelp.com/python">Python</a>
+                <a id="ctl00_header_cntrl1_subMBas" href="http://www.includehelp.com/categories.aspx">All categories...</a>
+            </div>
+        </li>
+        <li class="w3-hide-small w3-dropdown-hover">
+            <a id="ctl00_header_cntrl1_rMenuSolv" class="w3-padding" href="http://www.includehelp.com/topics.aspx?topic=solved_programs">Solved Programs  <i class="fa fa-caret-down"></i></a>
+            <div class="w3-dropdown-content w3-white w3-card-4 i3-sub-menu">
+                <a id="ctl00_header_cntrl1_subSolvedCLang" href="http://www.includehelp.com/c-programming-examples-solved-c-programs.aspx">C</a>                
+                <a id="ctl00_header_cntrl1_subSolvedCPPL" href="http://www.includehelp.com/cpp-programming-examples-solved-cpp-programs.aspx">C++</a>                
+                <a id="ctl00_header_cntrl1_subSolvedData" href="http://www.includehelp.com/c-programming-data-structure-examples.aspx">Data Structure</a>                
+                <a id="ctl00_header_cntrl1_subSolvedJAVA" href="http://www.includehelp.com/java-language-solved-programs.aspx">JAVA</a>
+                <a id="ctl00_header_cntrl1_subSolvedPHPE" href="http://www.includehelp.com/php">PHP</a>
+                <a id="ctl00_header_cntrl1_subSolvedSCAL" href="http://www.includehelp.com/scala-programs">SCALA</a>
+                <a id="ctl00_header_cntrl1_subSolvedCINT" href="http://www.includehelp.com/frequently-asked-c-programs-for-interview.aspx">C Interview Programs</a>
+            </div>
+        </li>
+
+        <li class="w3-hide-small w3-dropdown-hover">
+            <a id="ctl00_header_cntrl1_rMenuApti" class="w3-padding" href="http://www.includehelp.com/aptitude-questions-and-answers.aspx">Aptitude  <i class="fa fa-caret-down"></i></a>
+            <div class="w3-dropdown-content w3-white w3-card-4 i3-sub-menu">
+                <a id="ctl00_header_cntrl1_subMCLangApt" href="http://www.includehelp.com/c-programming-aptitude-questions-and-answers.aspx">C</a>
+                <a id="ctl00_header_cntrl1_subMCPPLApt" href="http://www.includehelp.com/cpp-programming/aptitude-questions-and-answers.aspx">C++</a>
+                <a id="ctl00_header_cntrl1_subMJavaLApt" href="http://www.includehelp.com/java-programming-aptitude-questions-and-answers.aspx">JAVA</a>
+                <a id="ctl00_header_cntrl1_subMDBMSApt" href="http://www.includehelp.com/dbms/aptitude-questions-and-answers.aspx">DBMS</a>
+            </div>
+        </li>
+
+        <li class="w3-hide-small w3-dropdown-hover">
+            <a id="ctl00_header_cntrl1_rMenuInte" class="w3-padding" href="http://www.includehelp.com/topics.aspx?topic=interview_questions">Interview  <i class="fa fa-caret-down"></i></a>
+            <div class="w3-dropdown-content w3-white w3-card-4 i3-sub-menu">
+                <a id="ctl00_header_cntrl1_subMCLangIntr" href="http://www.includehelp.com/c-programs/c-interview-questions-and-answers-page-1.aspx">C Interview</a>
+                <a id="ctl00_header_cntrl1_subMJavaLIntr" href="http://www.includehelp.com/java/java-interview-questions-and-answers-page-1.aspx">JAVA Interview</a>
+                <a id="ctl00_header_cntrl1_subMSEOLIntr" href="http://www.includehelp.com/seo-interview-questions-and-answers.aspx">SEO Interview</a>
+                <a id="ctl00_header_cntrl1_subMHRFEIntr" href="http://www.includehelp.com/articles/most-frequently-asked-hr-interview-questions.aspx">H.R. Interview</a>
+            </div>        
+        </li>                    
+        <li class="w3-hide-small w3-dropdown-hover">
+            <a href="javascript:void(0)" class="w3-hover-none w3-padding" title="Other">Other <i class="fa fa-caret-down"></i></a>     
+            <div class="w3-dropdown-content w3-white w3-card-4 i3-sub-menu">
+                <a id="ctl00_header_cntrl1_subMGBlog" href="http://www.includehelp.com/guest-posting">GUEST BLOGS</a>                
+                <a id="ctl00_header_cntrl1_subMArtic" href="http://www.includehelp.com/articles">ARTICLES</a>                
+                <a id="ctl00_header_cntrl1_subMArchi" href="http://www.includehelp.com/archive">INCLUDEHELP ARCHIVE</a>                
+                <a id="ctl00_header_cntrl1_subMFeedb" href="http://www.includehelp.com/feedback.aspx">FEEDBACK</a>
+                <a id="ctl00_header_cntrl1_subMAbout" href="http://www.includehelp.com/about-includehelp-com.aspx">ABOUT</a>
+                <a id="ctl00_header_cntrl1_subMConta" href="http://www.includehelp.com/contact.aspx">CONTACT</a>
+            </div>
+        </li>
+        <li class="w3-hide-small w3-dropdown-hover">
+            <a id="ctl00_header_cntrl1_thanksSudMenu" href="http://www.includehelp.com/categories.aspx">Categories</a>
+        </li>
+    </ul>
+</div>
+
+<!-- Navbar on small screens -->
+<div id="navDemo" class="w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:36px">
+    <ul class="w3-navbar w3-left-align w3-light-grey w3-text-black">
+        <li><a id="ctl00_header_cntrl1_HyperLink1" class="w3-padding" href="http://www.includehelp.com/c">C</a></li>
+        <li><a id="ctl00_header_cntrl1_HyperLink6" class="w3-padding" href="http://www.includehelp.com/cpp-tutorial/">C++</a></li>
+        <li><a id="ctl00_header_cntrl1_HyperLink2" class="w3-padding" href="http://www.includehelp.com/topics.aspx?topic=solved_programs">Solved Programs</a></li>
+        <li><a id="ctl00_header_cntrl1_HyperLink3" class="w3-padding" href="http://www.includehelp.com/aptitude-questions-and-answers.aspx">Aptitude Questions</a></li>
+        <li><a id="ctl00_header_cntrl1_HyperLink4" class="w3-padding" href="http://www.includehelp.com/topics.aspx?topic=interview_questions">Interview Questions</a></li>
+        <li><a id="ctl00_header_cntrl1_HyperLink5" class="w3-padding" href="http://www.includehelp.com/categories.aspx">Categories</a></li>
+    </ul>
+</div>
+<div class="w3-row w3-card-2 i3-header w3-center">
+<div class="w3-quarter">
+    <img id="ctl00_header_cntrl1_footerLogo" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/iHelp_logo.jpg" alt="includehelp.com" style="border-width:0px;height:80px;width:180px;">
+</div>
+    <div class="w3-half w3-left-align w3-padding-left w3-shortMenu">
+        <p>
+            <a id="ctl00_header_cntrl1_new00" href="http://www.includehelp.com/c/">
+            C</a> 
+            <a id="ctl00_header_cntrl1_new01" href="http://www.includehelp.com/cpp-tutorial/">
+            C++</a> 
+            <a id="ctl00_header_cntrl1_new02" href="http://www.includehelp.com/java/">
+            Java</a> 
+            <a id="ctl00_header_cntrl1_new03" href="http://www.includehelp.com/data-structure-tutorial/">
+            Data Structure</a> 
+            <a id="ctl00_header_cntrl1_new04" href="http://www.includehelp.com/python/">
+            Python</a> 
+            <a id="ctl00_header_cntrl1_new05" href="http://www.includehelp.com/code-snippets/html-javascript-code-snippets.aspx#js">
+            JavaScript</a> 
+            <a id="ctl00_header_cntrl1_new06" href="http://www.includehelp.com/code-snippets/html-javascript-code-snippets.aspx#css">
+            CSS</a> 
+            <a id="ctl00_header_cntrl1_new07" href="http://www.includehelp.com/ajax/">
+            Ajax</a> 
+            <a id="ctl00_header_cntrl1_new08" href="http://www.includehelp.com/pl-sql/">
+            PL/SQL</a> 
+            <a id="ctl00_header_cntrl1_new09" href="http://www.includehelp.com/php/">
+            PHP</a> 
+            <a id="ctl00_header_cntrl1_new10" href="http://www.includehelp.com/puzzles/">
+            Puzzles</a> 
+            <a id="ctl00_header_cntrl1_new11" href="http://www.includehelp.com/c-programming-examples-solved-c-programs.aspx">
+            C programs</a> 
+            <a id="ctl00_header_cntrl1_new12" href="http://www.includehelp.com/cpp-programming-examples-solved-cpp-programs.aspx">
+            C++ programs</a> 
+            <a id="ctl00_header_cntrl1_new13" href="http://www.includehelp.com/java-language-solved-programs.aspx">
+            Java programs</a> 
+        </p>    
+    </div>
+    <div class="w3-quarter w3-right-align">
+        <div>
+            <!--google search -->
+            <script type="text/javascript">
+                (function () {
+                    var cx = '006831746953521642389:w6b7nwokmyg';
+                    var gcse = document.createElement('script');
+                    gcse.type = 'text/javascript';
+                    gcse.async = true;
+                    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(gcse, s);
+                })();
+            </script>
+            <div id="___gcse_0"><div class="gsc-control-cse gsc-control-cse-en"><div class="gsc-control-wrapper-cse" dir="ltr"><form class="gsc-search-box gsc-search-box-tools" accept-charset="utf-8"><table class="gsc-search-box" cellspacing="0" cellpadding="0"><tbody><tr><td class="gsc-input"><div class="gsc-input-box " id="gsc-iw-id1"><table style="width: 100%; padding: 0px;" id="gs_id50" class="gstl_50 " cellspacing="0" cellpadding="0"><tbody><tr><td id="gs_tti50" class="gsib_a"><input autocomplete="off" size="10" class="gsc-input" name="search" title="search" style="width: 100%; padding: 0px; border: medium none; margin: 0px; height: auto; outline: medium none; background: rgb(255, 255, 255) url(&quot;http://www.google.com/cse/static/images/1x/googlelogo_lightgrey_46x16dp.png&quot;) no-repeat scroll left center; text-indent: 48px;" id="gsc-i-id1" x-webkit-speech="" x-webkit-grammar="builtin:search" dir="ltr" spellcheck="false" placeholder="Custom Search" type="text" lang="en"></td><td class="gsib_b"><div class="gsst_b" id="gs_st50" dir="ltr"><a class="gsst_a" href="javascript:void(0)" style="display: none;"><span class="gscb_a" id="gs_cb50">×</span></a></div></td></tr></tbody></table></div><input name="bgresponse" id="bgresponse" type="hidden"></td><td class="gsc-search-button"><input src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/search_box_icon.png" class="gsc-search-button gsc-search-button-v2" title="search" type="image"></td><td class="gsc-clear-button"><div class="gsc-clear-button" title="clear results">&nbsp;</div></td></tr></tbody></table><table class="gsc-branding" cellspacing="0" cellpadding="0"><tbody><tr><td class="gsc-branding-user-defined"></td><td class="gsc-branding-text"><div class="gsc-branding-text">powered by</div></td><td class="gsc-branding-img"><img src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/googlelogo_grey_46x15dp.png" class="gsc-branding-img" srcset="https://www.google.com/cse/static/images/2x/googlelogo_grey_46x15dp.png 2x"></td></tr></tbody></table></form><div class="gsc-results-wrapper-overlay"><div class="gsc-results-close-btn" tabindex="0"></div><div class="gsc-tabsAreaInvisible"><div class="gsc-tabHeader gsc-inline-block gsc-tabhActive">Web</div><span class="gs-spacer"> </span><div tabindex="0" class=" gsc-tabHeader gsc-tabhInactive gsc-inline-block">Image</div><span class="gs-spacer"> </span></div><div class="gsc-refinementsAreaInvisible"></div><div class="gsc-above-wrapper-area-invisible"><table class="gsc-above-wrapper-area-container" cellspacing="0" cellpadding="0"><tbody><tr><td class="gsc-result-info-container"><div class="gsc-result-info-invisible"></div></td><td class="gsc-orderby-container"><div class="gsc-orderby-invisible"><div class="gsc-orderby-label gsc-inline-block">Sort by:</div><div class="gsc-option-menu-container gsc-inline-block"><div class="gsc-selected-option-container gsc-inline-block"><div class="gsc-selected-option">Relevance</div><div class="gsc-option-selector"></div></div><div class="gsc-option-menu-invisible"><div class="gsc-option-menu-item gsc-option-menu-item-highlighted"><div class="gsc-option">Relevance</div></div><div class="gsc-option-menu-item"><div class="gsc-option">Date</div></div></div></div></div></td></tr></tbody></table></div><div class="gsc-adBlockInvisible"></div><div class="gsc-wrapper"><div class="gsc-adBlockInvisible"></div><div class="gsc-resultsbox-invisible"><div class="gsc-resultsRoot gsc-tabData gsc-tabdActive"><table class="gsc-resultsHeader" cellspacing="0" cellpadding="0"><tbody><tr><td class="gsc-twiddleRegionCell"><div class="gsc-twiddle"><div class="gsc-title">Web</div></div><div class="gsc-stats"></div><div class="gsc-results-selector gsc-all-results-active"><div class="gsc-result-selector gsc-one-result" title="show one result">&nbsp;</div><div class="gsc-result-selector gsc-more-results" title="show more results">&nbsp;</div><div class="gsc-result-selector gsc-all-results" title="show all results">&nbsp;</div></div></td><td class="gsc-configLabelCell"></td></tr></tbody></table><div><div class="gsc-expansionArea"></div></div></div><div class="gsc-resultsRoot gsc-tabData gsc-tabdInactive"><table class="gsc-resultsHeader" cellspacing="0" cellpadding="0"><tbody><tr><td class="gsc-twiddleRegionCell"><div class="gsc-twiddle"><div class="gsc-title">Image</div></div><div class="gsc-stats"></div><div class="gsc-results-selector gsc-all-results-active"><div class="gsc-result-selector gsc-one-result" title="show one result">&nbsp;</div><div class="gsc-result-selector gsc-more-results" title="show more results">&nbsp;</div><div class="gsc-result-selector gsc-all-results" title="show all results">&nbsp;</div></div></td><td class="gsc-configLabelCell"></td></tr></tbody></table><div><div class="gsc-expansionArea"></div></div></div></div></div></div><div class="gsc-modal-background-image" tabindex="0"></div></div></div></div>
+            <!--End of google search -->
+        </div>
+    </div>
+    
+</div>
+    <!--End of Header-->
+
+    <!--Main Page Section-->
+    <form name="aspnetForm" method="post" action="./c-programming-examples-solved-c-programs.aspx" id="aspnetForm">
+<div>
+<input name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJNjg4MjA0ODU5ZGRLBWkVt7TO1rTy0v7HK77RffPq18ivxMk9bBe0V4izIQ==" type="hidden">
+</div>
+
+<div>
+
+	<input name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="F850E240" type="hidden">
+</div>
+        <!--main section-->
+        <div class="w3-row">           
+            <div class="w3-col l8 s12 i3-leftPnl">
+                
+        <p>
+            <a id="ctl00_ContentPlaceHolder1_idHomePage" href="http://www.includehelp.com/">Home</a> » 
+            <a id="ctl00_ContentPlaceHolder1_idCLanguage" href="http://www.includehelp.com/c/">C programming language</a>
+        </p>
+
+        <h1>C programming Solved Programs/Examples with Solutions</h1>
+
+        <!-- User Control-->
+        
+        <!-- End of User Control-->
+
+        <p>This page contains the <strong><b><i>C programming solved programs/examples with solutions</i></b></strong>, here we are providing most important programs on each topic. <br>We tried to provide all <b>logical</b>, <b>mathematical</b> and <b>conceptual</b>
+ programs that can help to write programs very easily in C language. If 
+you do not want to browse programs by categories, here is the list of 
+all <a href="http://www.includehelp.com/c-programs-solved-examples-source-codes-list-view.aspx">c programs</a>.</p>
+
+        <h2>Here is the List of C programming solved programs/examples with solutions and detailed explanation.</h2>
+                
+
+        <h3>Browse C programs by categories...</h3>
+        <div class="btnR">
+            <a href="http://www.includehelp.com/c-programs/c-programs-basic-input-output-operations.aspx">Basic Input, Output, if else,<br>Ternary Operator based Programs. <b>→</b> </a><span>28</span><br>
+            <a href="http://www.includehelp.com/c-programs/switch-case-examples.aspx">C switch case programs. <b>→</b> </a><span>06</span><br>
+            <a href="http://www.includehelp.com/c-programs/goto-programs.aspx">C ‘goto’ programs. <b>→</b> </a><span>10</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-bitwise-programs-and-solutions.aspx">Bitwise related Programs. <b>→</b> </a><span>11</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-looping-using-for-while-do-while.aspx">Looping (for, while, do while) Programs. <b>→</b> </a><span>12</span><br>
+            <a href="http://www.includehelp.com/c-programs/string-manipulation-programs.aspx">C String Manipulation programs.<b>→</b> </a><span>10</span><br>
+            <a href="http://www.includehelp.com/c-programs/string.aspx">C String programs.<b>→</b> </a><span>09</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-string-user-defined-functions.aspx">String User Define Functions Programs. <b>→</b> </a><span>11</span><br>
+            <a href="http://www.includehelp.com/c-programs/recursion-examples.aspx">Recursion Programs. <b>→</b> </a><span>06</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-number-related-digits-manipulation-programs.aspx">Number (Digits Manipulation) Programs. <b>→</b> </a><span>10</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-number-system-conversion-programs.aspx">Number System Conversion Programs. <b>→</b> </a><span>06</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-program-to-print-stars-in-series-pyramid-using-looping.aspx">Star/Pyramid Programs. <b>→</b> </a><span>17</span><br>
+            <a href="http://www.includehelp.com/c-programs/sum-of-series-examples.aspx">Sum of Series Programs. <b>→</b> </a><span>05</span><br>
+            <a href="http://www.includehelp.com/c-programs/user-define-function-examples.aspx">User Define Function Programs. <b>→</b> </a><span>05</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-one-dimensional-arrays-problems-and-solutions.aspx">One Dimensional Array Programs. <b>→</b> </a><span>16</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-two-dimensional-array-or-matrix-programs.aspx">Two Dimensional Array (Matrix) Programs. <b>→</b> </a><span>07</span><br>
+            <a href="http://www.includehelp.com/c-programs/file-handling-in-c-solved-programs.aspx">File Handling Programs. <b>→</b> </a><span>09</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-structure-and-union-solved-examples.aspx">Structure &amp; Union Programs. <b>→</b> </a><span>11</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-pointers-solved-examples.aspx">Pointer Programs. <b>→</b> </a><span>10</span><br>
+            <a href="http://www.includehelp.com/c-programs/dynamic-memory-allocation-examples.aspx">Dynamic Memory Allocation Programs. <b>→</b> </a><span>05</span><br>
+            <a href="http://www.includehelp.com/c-programs/command-line-arguments-examples.aspx">Command Line Arguments Programs. <b>→</b> </a><span>04</span><br>
+            <a href="http://www.includehelp.com/c-programs/c-programs-misc-solved-programs.aspx">Misc Problems &amp; Solutions. <b>→</b> </a><span>07</span><br>
+        </div>
+        <div style="clear:both"></div>
+
+        <!-- User Control-->
+        
+
+<br>
+<center>
+<!-- google_ad_section_start -->
+    <script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/adsbygoogle.js"></script>
+    <!-- content_adResponsive -->
+    <ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-8685817763351539" data-ad-slot="3366259202" data-ad-format="rectangle" data-adsbygoogle-status="done"><ins id="aswift_0_expand" style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:792px;background-color:transparent;"><ins id="aswift_0_anchor" style="display:block;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:792px;background-color:transparent;"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;width:792px;height:280px;" width="792" height="280" frameborder="0"></iframe></ins></ins></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+<!-- google_ad_section_end -->
+</center>
+<br>
+
+        <!-- End of User Control-->
+
+        <h3>C standard library functions example programs...</h3>
+        <ol class="w3-ol">
+            <li><a href="http://www.includehelp.com/c-library-functions/ctype-example-programs.aspx"><b>ctype.h</b> Library Functions. <b>→</b></a></li>
+            <li><a href="http://www.includehelp.com/c-library-functions/string-example-programs.aspx"><b>string.h</b> Library Functions. <b>→</b></a></li>
+        </ol>
+        
+
+        <h3>Advance C programs</h3>
+        <ol class="w3-ol">
+            <li><a href="http://www.includehelp.com/c-programs/print-character-without-format-specifiers.aspx" target="_blank">C program to <b>print character without using format specifiers</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/find-binary-addition-subtraction.aspx" target="_blank" "="">C program to find <b>Binary Addition</b> and <b>Binary Subtraction</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-print-weekday-of-date.aspx" target="_blank">C program to print <b>weekday of given date</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/gotoxy-clrscr-getch-getche-for-gcc-linux.aspx" target="_blank"><b>gotoxy()</b>,<b>clrscr()</b>,<b>getch()</b>,<b>getche()</b> for <b>GCC, Linux</b>.</a></li>
+        </ol>
+        <p><a href="http://www.includehelp.com/c-programs/advacnce-c-examples.aspx" class="w3-btn w3-blue">All Advance C Programs...</a></p>
+
+
+        <h3>Top searched programs...</h3>
+        <p>Here is the <b>list</b> of most <b><i>important/useful programs</i></b> searched on the <b>web</b>.</p>
+        <ol class="w3-ol">
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-print-hello-world.aspx" target="_blank"><b>First C program</b> to print <b>"Hello World"</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-find-factorial-of-a-number.aspx" target="_blank">C program to find <b>factorial of a number</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-swap-two-numbers-using-different-methods.aspx" target="_blank">C program to <b>swap two numbers</b> without using third variable.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-check-number-is-armstrong-or-not.aspx" target="_blank">C program to check whether a number if <b>Armstrong</b> or not.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-check-number-is-even-or-odd.aspx" target="_blank">C program to check whether a number if <b>Even or Odd</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-print-all-leap-years-from-1-to-n.aspx" target="_blank">C program to print all <b>leap years</b> from 1 to N.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-calculate-gross-salary-of-an-employee.aspx" target="_blank">C program to calculate <b>employee gross salary</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-print-tables-of-numbers-from-1-to-20.aspx" target="_blank">C Program to print <b>tables of numbers</b> from 1 to 20.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-print-stars-in-series-pyramid-using-looping.aspx" target="_blank">C program to <b>print star/pyramid series</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-convert-temperature-from-fahrenheit-to-celsius.aspx" target="_blank">C program to <b>convert temperature</b> from <b>Celsius to Fahrenheit</b> and vice versa.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-convert-number-from-decimal-to-binary.aspx" target="_blank">C program to <b>convert</b> number from <b>Decimal to Binary</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-convert-number-from-decimal-to-binary.aspx" target="_blank">C program to <b>convert</b> number from <b>Binary to Decimal</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-print-ascii-table.aspx" target="_blank">C program to print <b>ASCII Table</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-get-set-system-date-time.aspx" target="_blank">C program to <b>get and set</b> current <b>system date and time</b>.</a></li>
+            <li><a href="http://www.includehelp.com/c-programs/c-program-to-run-dos-commands-using-c-program.aspx" target="_blank">C program to <b>run dos command</b>.</a></li>
+        </ol>
+        <br>
+
+        <p><big><b>Latest programs</b></big></p>
+        <ol reversed="">
+            <li><a href="http://www.includehelp.com/c-programs/print-ascii-values-of-all-digits-using-goto-statement.aspx">C program to print ASCII values of all digits using goto statement.</a> - <small><i>November 19, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/print-ascii-values-of-all-lowercase-alphabets-using-goto-statement.aspx">C program to print ASCII values of all lowercase alphabets using goto statement.</a> - <small><i>November 19, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/print-ascii-values-of-all-uppercase-alphabets-using-goto-statement.aspx">C program to print ASCII values of all uppercase alphabets using goto statement.</a> - <small><i>November 19, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/print-1-11-31-61-10-times-using-goto-statement.aspx">C program to print 1, 11, 31, 61, ... 10 times using goto statement.</a> - <small><i>November 09, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/print-square-and-cube-of-all-numbers-from-1-to-N-using-goto-statement.aspx">C program to print square and cube of all numbers from 1 to N using goto statement.</a> - <small><i>November 09, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/read-a-name-and-print-its-10-times-using-goto.aspx">C program to read a name and print its 10 times using goto statement.</a> - <small><i>November 07, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/print-table-of-given-number-using-goto.aspx">C program to print table of a given number using goto statement.</a> - <small><i>November 07, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/print-table-of-2-using-goto.aspx">C program to print table of 2 using goto statement.</a> - <small><i>November 07, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/print-all-numbers-from-n-to-1-using-goto.aspx">C program to print all numbers from N to 1 using goto statement.</a> - <small><i>November 07, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/print-all-numbers-from-1-to-n-using-goto.aspx">C program to print all numbers from 1 to N using goto statement.</a> - <small><i>November 07, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/print-ascii-value-of-a-character.aspx">C program to print ASCII value of a character.</a> - <small><i>November 07, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/find-subtraction-of-two-integer-number.aspx">C program to find subtraction of two integer number.</a> - <small><i>November 07, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/c-programs/read-n-strings-and-print-each-string-length.aspx">C program to read n strings and print each string's length.</a> - <small><i>October 24, 2017</i></small></li>
+            <li><a href="http://www.includehelp.com/code-snippets/convert-string-to-integer-in-c-programming.aspx">Convert String to Integer in C programming language.</a> - <small><i>May 27, 2016</i></small></li>
+        </ol>
+        <br>
+
+
+                
+    <!-- User Control-->
+    
+
+
+<div class="w3-row i3-bottomAd">
+        <br>
+        <script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/adsbygoogle.js"></script>
+        <!-- IH_336x280_Left -->
+        <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-8685817763351539" data-ad-slot="7211507001" data-adsbygoogle-status="done"><ins id="aswift_1_expand" style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent;"><ins id="aswift_1_anchor" style="display:block;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent;"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;width:336px;height:280px;" width="336" height="280" frameborder="0"></iframe></ins></ins></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+</div>
+<br><br>
+<script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/adsbygoogle.js"></script>
+<!-- LinkAdUnit_200x90 -->
+<ins class="adsbygoogle" style="display:inline-block;width:200px;height:90px" data-ad-client="ca-pub-8685817763351539" data-ad-slot="8326828807" data-adsbygoogle-status="done"><ins id="aswift_2_expand" style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:200px;background-color:transparent;"><ins id="aswift_2_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:200px;background-color:transparent;"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_2" name="aswift_2" style="left:0;position:absolute;top:0;width:200px;height:90px;" width="200" height="90" frameborder="0"></iframe></ins></ins></ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<br><br>
+<script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/adsbygoogle.js"></script>
+<!-- LinkAdUnit_200x90 -->
+<ins class="adsbygoogle" style="display:inline-block;width:200px;height:90px" data-ad-client="ca-pub-8685817763351539" data-ad-slot="8326828807" data-adsbygoogle-status="done"><ins id="aswift_3_expand" style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:200px;background-color:transparent;"><ins id="aswift_3_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:200px;background-color:transparent;"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_3" name="aswift_3" style="left:0;position:absolute;top:0;width:200px;height:90px;" width="200" height="90" frameborder="0"></iframe></ins></ins></ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+
+
+    <!-- End of User Control-->    
+
+    <br><br>
+    <!-- Comments Plugin-->
+    
+
+
+
+<!--xxxxxxxxxxxxxxxxxxxxxxx COMMENT SECTION xxxxxxxxxxxxxxxxxxxxxxx-->
+<br>
+<div class="w3-padding w3-sand">        
+<center><h4><b>COMMENTS</b></h4></center>
+<div id="disqus_thread"><iframe id="dsq-app7234" name="dsq-app7234" allowtransparency="true" scrolling="no" tabindex="0" title="Disqus" style="width: 1px !important; min-width: 100% !important; border: medium none !important; overflow: hidden !important; height: 11787px !important;" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/a.html" horizontalscrolling="no" verticalscrolling="no" width="100%" frameborder="0"></iframe><iframe id="dsq-app7237" name="dsq-app7237" allowtransparency="true" scrolling="no" tabindex="0" title="Disqus" sandbox="allow-forms allow-popups allow-same-origin allow-scripts" style="width: 1px !important; min-width: 100% !important; border: medium none !important; overflow: hidden !important; height: 223px !important;" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/a_002.html" width="100%" frameborder="0"></iframe></div>
+<script type="text/javascript">
+    (function () { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = '//includehelp.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+<!--xxxxxxxxxxxxxxxxxxxxxxx END OF COMMENT SECTION xxxxxxxxxxxxxxxxxxxxxxx-->
+
+    <!-- End of Comments Plugin--> 	
+
+
+            </div>
+            <div class="w3-col l4">
+                <!-- Right Nav Menu-->
+                
+
+<div class="rgtPnl">
+    <br>
+    <div class="w3-textLink">
+        <script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/adsbygoogle.js"></script>
+        <!-- homepage336x280 -->
+        <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-8685817763351539" data-ad-slot="1632931207" data-adsbygoogle-status="done"><ins id="aswift_4_expand" style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent;"><ins id="aswift_4_anchor" style="display:block;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent;"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_4" name="aswift_4" style="left:0;position:absolute;top:0;width:336px;height:280px;" width="336" height="280" frameborder="0"></iframe></ins></ins></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    <br>
+
+    <div class="w3-textLink">
+        <b>solved programs:</b> <br>
+        » <a id="ctl00_RgtNavMenu_rgtNavCat00" href="http://www.includehelp.com/c-programming-examples-solved-c-programs.aspx">c</a>
+        » <a id="ctl00_RgtNavMenu_rgtNavCat01" href="http://www.includehelp.com/cpp-programming-examples-solved-cpp-programs.aspx">c++</a>
+        » <a id="ctl00_RgtNavMenu_rgtNavCat02" href="http://www.includehelp.com/java-language-solved-programs.aspx">java</a>
+        » <a id="ctl00_RgtNavMenu_rgtNavCat03" href="http://www.includehelp.com/c-programming-data-structure-examples.aspx">ds</a>
+        » <a id="ctl00_RgtNavMenu_rgtNavCat04" href="http://www.includehelp.com/dot-net/c-sharp-programs.aspx">C#</a>
+        » <a id="ctl00_RgtNavMenu_rgtNavCat05" href="http://www.includehelp.com/scala-programs">scala</a>
+        <br>
+
+        <b>programming languages:</b> <br>
+        »  <a id="ctl00_RgtNavMenu_rgtNavPrgC" href="http://www.includehelp.com/c/">c</a>
+        »  <a id="ctl00_RgtNavMenu_rgtNavPrgCpp" href="http://www.includehelp.com/cpp-tutorial/">c++</a>
+        »  <a id="ctl00_RgtNavMenu_rgtNavPrgJava" href="http://www.includehelp.com/java/">java</a>
+        »  <a id="ctl00_RgtNavMenu_rgtNavPrgDS" href="http://www.includehelp.com/data-structure-tutorial/">ds</a>
+        »  <a id="ctl00_RgtNavMenu_rgtNavPrgPy" href="http://www.includehelp.com/python/">python</a>
+        »  <a id="ctl00_RgtNavMenu_rgtNavPrgPL" href="http://www.includehelp.com/pl-sql/">pl/sql</a>
+        »  <a id="ctl00_RgtNavMenu_rgtNavPrgDN" href="http://www.includehelp.com/dot-net/">.Net</a>
+        <br>
+
+        <b>web technologies:</b> <br>
+        »  <a id="ctl00_RgtNavMenu_rgtNavWebPhp" href="http://www.includehelp.com/php/">php</a>
+        »  <a id="ctl00_RgtNavMenu_rgtNavWebJS" href="http://www.includehelp.com/code-snippets/html-javascript-code-snippets.aspx#js">javascript</a>
+        »  <a id="ctl00_RgtNavMenu_rgtNavWebCSS" href="http://www.includehelp.com/code-snippets/html-javascript-code-snippets.aspx#css">css</a>
+        »  <a id="ctl00_RgtNavMenu_rgtNavWebAjx" href="http://www.includehelp.com/ajax/">ajax</a>
+
+        <br>
+        <b>aptitude questions:</b><br>
+        » <a id="ctl00_RgtNavMenu_lnkIndcapt" href="http://www.includehelp.com/c-programming-aptitude-questions-and-answers.aspx">c</a>
+        » <a id="ctl00_RgtNavMenu_lnkIndcppApt" href="http://www.includehelp.com/cpp-programming/aptitude-questions-and-answers.aspx">c++</a>
+        » <a id="ctl00_RgtNavMenu_lnkIndjavaApt" href="http://www.includehelp.com/java-programming-aptitude-questions-and-answers.aspx">java</a>
+        » <a id="ctl00_RgtNavMenu_lnkIndDBMSApt" href="http://www.includehelp.com/dbms/aptitude-questions-and-answers.aspx">dbms</a>
+
+        <br>
+        <b>interview questions:</b><br>
+        » <a id="ctl00_RgtNavMenu_lnkIndcInt" href="http://www.includehelp.com/c-programs/c-interview-questions-and-answers-page-1.aspx">c</a>
+        » <a id="ctl00_RgtNavMenu_lnkIndjavaInt" href="http://www.includehelp.com/java/java-interview-questions-and-answers-page-1.aspx">java</a>
+        » <a id="ctl00_RgtNavMenu_lnkIndseoInt" href="http://www.includehelp.com/seo-interview-questions-and-answers.aspx">seo</a>
+    </div> 
+    <br>
+
+        
+    <div class="w3-textLink">
+        <script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/adsbygoogle.js"></script>
+        <!-- R_300x600 -->
+        <ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-8685817763351539" data-ad-slot="6628996808" data-adsbygoogle-status="done"><ins id="aswift_5_expand" style="display:inline-table;border:none;height:600px;margin:0;padding:0;position:relative;visibility:visible;width:300px;background-color:transparent;"><ins id="aswift_5_anchor" style="display:block;border:none;height:600px;margin:0;padding:0;position:relative;visibility:visible;width:300px;background-color:transparent;"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_5" name="aswift_5" style="left:0;position:absolute;top:0;width:300px;height:600px;" width="300" height="600" frameborder="0"></iframe></ins></ins></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    <br>
+
+
+    <div class="w3-textLink">
+        <b>most viewed pages:</b>
+        <ul>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop0" href="http://www.includehelp.com/c-programming-examples-solved-c-programs.aspx">C language solved programs</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop1" href="http://www.includehelp.com/cpp-programming-examples-solved-cpp-programs.aspx">C++ language solved programs</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop2" href="http://www.includehelp.com/c-programs/switch-case-examples.aspx">C switch case programs</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop3" href="http://www.includehelp.com/c-programs/c-programs-basic-input-output-operations.aspx">Basic Input, Output C programs</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop4" href="http://www.includehelp.com/c/infix-to-postfix-conversion-using-stack-with-c-program.aspx">Infix to postfix conversion using stack in C</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop5" href="http://www.includehelp.com/c-programming-aptitude-questions-and-answers.aspx">C programming Aptitude Que. and Ans.</a></li>            
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop6" href="http://www.includehelp.com/java-programs/core-java-examples.aspx">Core java programs</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop7" href="http://www.includehelp.com/computer-number-systems.aspx">Computer number systems &amp; conversions </a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop8" href="http://www.includehelp.com/java-language-solved-programs.aspx">Java solved programs </a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPop9" href="http://www.includehelp.com/cpp-programs/file-handling-examples.aspx">C++ file handling programs </a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPopA" href="http://www.includehelp.com/c-programs/recursion-examples.aspx">Recursion programs in C</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavPopM" href="http://www.includehelp.com/most-viewed-pages.aspx">More pages...</a></li>
+        </ul>
+    </div> 
+    <br>
+
+
+    
+    <div class="w3-textLink">
+        <script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/adsbygoogle.js"></script>
+        <!-- homepage336x280_bottom -->
+        <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-8685817763351539" data-ad-slot="9427640649" data-adsbygoogle-status="done"><ins id="aswift_6_expand" style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent;"><ins id="aswift_6_anchor" style="display:block;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent;"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_6" name="aswift_6" style="left:0;position:absolute;top:0;width:336px;height:280px;" width="336" height="280" frameborder="0"></iframe></ins></ins></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    <br>        
+               
+    <div class="w3-textLink">
+        <b>categories:</b><br>
+    <p>
+        <a id="ctl00_RgtNavMenu_ptag00" href="http://www.includehelp.com/c/">
+        C</a>, 
+        <a id="ctl00_RgtNavMenu_ptag01" href="http://www.includehelp.com/cpp-tutorial/">
+        C++</a>, 
+        <a id="ctl00_RgtNavMenu_ptag02" href="http://www.includehelp.com/java/">
+        Java</a>, 
+        <a id="ctl00_RgtNavMenu_ptag03" href="http://www.includehelp.com/data-structure-tutorial/">
+        D.S.</a>, 
+        <a id="ctl00_RgtNavMenu_ptag04" href="http://www.includehelp.com/python/">
+        Python</a>, 
+        <a id="ctl00_RgtNavMenu_ptag05" href="http://www.includehelp.com/dot-net/">
+        .Net</a>, 
+        <a id="ctl00_RgtNavMenu_ptag06" href="http://www.includehelp.com/sql/">
+        SQL</a>, 
+        <a id="ctl00_RgtNavMenu_ptag07" href="http://www.includehelp.com/pl-sql/">
+        PL/SQL</a>, 
+        <a id="ctl00_RgtNavMenu_ptag08" href="http://www.includehelp.com/ajax/">
+        Ajax</a>, 
+        <a id="ctl00_RgtNavMenu_ptag09" href="http://www.includehelp.com/php/">
+        PHP</a>, 
+        <a id="ctl00_RgtNavMenu_ptag10" href="http://www.includehelp.com/code-snippets/html-javascript-code-snippets.aspx#js">
+        JavaScript</a>, 
+        <a id="ctl00_RgtNavMenu_ptag11" href="http://www.includehelp.com/code-snippets/html-javascript-code-snippets.aspx#css">
+        CSS</a>, 
+        <a id="ctl00_RgtNavMenu_ptag12" href="http://www.includehelp.com/code-snippets/html-javascript-code-snippets.aspx#html">
+        HTML</a>, 
+        <a id="ctl00_RgtNavMenu_ptag13" href="http://www.includehelp.com/c-programming-examples-solved-c-programs.aspx">
+        C programs</a>, 
+        <a id="ctl00_RgtNavMenu_ptag14" href="http://www.includehelp.com/cpp-programming-examples-solved-cpp-programs.aspx">
+        C++ programs</a>, 
+        <a id="ctl00_RgtNavMenu_ptag15" href="http://www.includehelp.com/java-language-solved-programs.aspx">
+        Java programs</a>, 
+        <a id="ctl00_RgtNavMenu_ptag16" href="http://www.includehelp.com/dot-net/c-sharp-programs.aspx">
+        C# programs</a>, 
+        <a id="ctl00_RgtNavMenu_ptag17" href="http://www.includehelp.com/c-programming-data-structure-examples.aspx">
+        DS programs</a>, 
+        <a id="ctl00_RgtNavMenu_ptag18" href="http://www.includehelp.com/c-programming-aptitude-questions-and-answers.aspx">
+        C aptitude</a>, 
+        <a id="ctl00_RgtNavMenu_ptag19" href="http://www.includehelp.com/cpp-programming/aptitude-questions-and-answers.aspx">
+        C++ aptitude</a>, 
+        <a id="ctl00_RgtNavMenu_ptag20" href="http://www.includehelp.com/java-programming-aptitude-questions-and-answers.aspx">
+        Java aptitude</a>, 
+        <a id="ctl00_RgtNavMenu_ptag21" href="http://www.includehelp.com/dbms/aptitude-questions-and-answers.aspx">
+        DBMS aptitude</a>, 
+        <a id="ctl00_RgtNavMenu_ptag22" href="http://www.includehelp.com/operating-systems/">
+        O.S.</a>, 
+        <a id="ctl00_RgtNavMenu_ptag23" href="http://www.includehelp.com/computer-networks/">
+        Networking</a>, 
+        <a id="ctl00_RgtNavMenu_ptag24" href="http://www.includehelp.com/embedded-system/">
+        Embedded systems</a>, 
+        <a id="ctl00_RgtNavMenu_ptag25" href="http://www.includehelp.com/nanotechnology/">
+        Nanotechnologies</a>, 
+        <a id="ctl00_RgtNavMenu_ptag26" href="http://www.includehelp.com/linux-operating-system.aspx">
+        Linux</a>, 
+        <a id="ctl00_RgtNavMenu_ptag27" href="http://www.includehelp.com/disk-operating-system-dos-commands.aspx">
+        DOS</a>, 
+        <a id="ctl00_RgtNavMenu_ptag28" href="http://www.includehelp.com/puzzles/">
+        puzzles</a>, 
+        <a id="ctl00_RgtNavMenu_ptag29" href="http://www.includehelp.com/syntaxes/">
+        syntaxes</a>, 
+    </p>
+    </div>
+    <br>
+    
+    <div class="w3-textLink">
+        <b>featured posts:</b><br>
+        <ul>
+            <li><a id="ctl00_RgtNavMenu_rgtNavFea0" href="http://www.includehelp.com/c/difference-between-d-and-i-format-specifier-in-c-programming-language.aspx">Difference between %d and %i in C language.</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavFea1" href="http://www.includehelp.com/c/difference-between-printf-and-sprintf-in-c-programming-language.aspx">Difference between printf and sprintf in C language.</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavFea2" href="http://www.includehelp.com/c-programming-questions/difference-between-sentinel-and-counter-controlled-loop.aspx">Difference between Sentinel and Counter Controlled loop in C language.</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavFea3" href="http://www.includehelp.com/c-programming-questions/difference-between-entry-and-exit-controlled-loop.aspx">Difference between Entry Control and Exit Control loop in C language.</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavFea4" href="http://www.includehelp.com/c-programming-questions/what-is-the-difference-between-unary-and-binary-operators.aspx">Difference between Unary and Binary Operators in C language.</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavFea5" href="http://www.includehelp.com/c-programming-questions/what-is-difference-between-assignment-and-equalto-operator.aspx">Difference between = (Assignment) and == (Equal to) Operators in C language.</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavFea6" href="http://www.includehelp.com/c-programming-questions/what-is-the-difference-between-addressof-and-logical-and.aspx">Difference between &amp; (Address Of) and &amp;&amp; (Logical AND) Operators in C language.</a></li>
+            <li><a id="ctl00_RgtNavMenu_rgtNavFea7" href="http://www.includehelp.com/c/difference-between-local-and-global-variables-in-c.aspx">Difference between Local and Global variables in C.</a></li>
+        </ul>
+    </div>
+    <br> 
+    <div class="w3-textLink">
+    <b>c tips and tricks:</b><br>    
+        <ul>
+            <li><a id="ctl00_RgtNavMenu_cTips00" href="http://www.includehelp.com/tips/c/copy-two-bytes-integer-number-short-int-into-bytes.aspx">C - Fastest way to copy two bytes integer number (short int) into byte buffer.</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips01" href="http://www.includehelp.com/tips/c/pre-increment-is-faster-than-post-increment.aspx">C - Pre-Increment is faster than post-increment.</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips02" href="http://www.includehelp.com/tips/c/c-how-to-create-delay-function-according-to-program-need.aspx">C - How to create delay function according to program need?</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips03" href="http://www.includehelp.com/tips/c/why-should-we-use-f-with-float-literal-in-c.aspx">Why should we use 'f' with float literal in C?</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips04" href="http://www.includehelp.com/tips/c/replacing-a-part-of-string-in-c.aspx">Replacing a part of string in C.</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips05" href="http://www.includehelp.com/tips/c/comparing-fixed-number-of-characters-of-two-strings-in-c-language.aspx">Comparing fixed number of characters of two strings in C language.</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips06" href="http://www.includehelp.com/tips/c/a-safest-way-to-check-value-using-equal-to-operator-in-c.aspx">A safest way to check value using 'Equal To' (==) operator in C.</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips07" href="http://www.includehelp.com/tips/c/check-even-or-odd-without-using-modulus-operator-in-c.aspx">Check EVEN or ODD without using Modulus (%) Operator in C.</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips08" href="http://www.includehelp.com/tips/c/how-can-we-use-a-single-byte-to-store-8-values-in-c.aspx">How can we use a single byte to store 8 values in C?</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips09" href="http://www.includehelp.com/tips/c/a-funny-trick-to-use-cpp-in-c-language-program.aspx">A funny trick to use C++ in C language program.</a></li>
+            <li><a id="ctl00_RgtNavMenu_cTips10" href="http://www.includehelp.com/tips/c/an-amazing-trick-to-print-maximum-value-of-an-unsigned-integer-in-c.aspx">An amazing trick to print maximum value of an unsigned integer in C.</a></li>
+        </ul> 
+    </div>
+        
+
+</div><!--End of rgtPnl div-->
+
+                <!-- End of Right Nav Menu-->
+            </div>
+        </div>
+        <!--End of main section-->
+
+        <!--Footer control-->
+        
+<!-- Footer -->
+<br>
+<div class="footer_css">
+        <center>
+            <!--AdX Ad unit by CyberMedia-->
+            <style>
+            .CM_ICH_Top_728x90 { width: 336px; height: 280px; }
+            @media(min-width: 300px) { .CM_ICH_Top_728x90 { width: 300px; height: 250px; } }
+            @media(min-width: 480px) { .CM_ICH_Top_728x90 { width: 468px; height: 60px; } }
+            @media(min-width: 750px) { .CM_ICH_Top_728x90 { width: 728px; height: 90px; } }
+            </style>
+            <script async="" src="C%20programming%20solved%20programs_examples%20with%20solutions%20-%20C%20source%20Codes_files/adsbygoogle.js"></script>
+            <!-- CM_ICH_Top_728x90 -->
+            <ins class="adsbygoogle CM_ICH_Top_728x90" style="display: inline-block; width: 728px; height: 90px;" data-ad-client="ca-pub-8834194653550774" data-ad-slot="9345708533" data-adsbygoogle-status="done"><ins id="aswift_7_expand" style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px;background-color:transparent;"><ins id="aswift_7_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px;background-color:transparent;"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_7" name="aswift_7" style="left:0;position:absolute;top:0;width:728px;height:90px;" width="728" height="90" frameborder="0"></iframe></ins></ins></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>        
+        </center>
+</div>
+<br>
+<div class="footer_css">
+    <a id="ctl00_footer_master_ftrMenuAbout" href="http://www.includehelp.com/about-includehelp-com.aspx">     About           </a>        
+    <a id="ctl00_footer_master_ftrMenuGuest" href="http://www.includehelp.com/personal">                       Personal Blogs  </a>
+    <a id="ctl00_footer_master_ftrMenuConta" href="http://www.includehelp.com/contact.aspx">                   Contact         </a>
+    <a id="ctl00_footer_master_ftrMenuFeedb" href="http://www.includehelp.com/feedback.aspx">                  Feedback        </a>    
+    <hr>
+    <p><small> Keywords (like Linux, Java, Oracle etc) used in this 
+website are the trademarks of their respective owners/company. This 
+website is not affiliated to any company. The tutorials are designed by 
+includehelp Team with the help of well known books and other online 
+resources. These Tutorials are free for all, for learning purposes only.
+ Enjoy learning:)<br>Copyright © 2015 - 2017. All Rights Reserved.</small></p>
+</div>
+
+        <!--End of Footer-->
+
+    </form>
+    <!--End of Main Page Section-->
+
+
+<table style="width: 254px; display: none; top: 61px; left: 948px; position: absolute;" class="gstl_50 gssb_c" cellspacing="0" cellpadding="0"><tbody><tr><td class="gssb_f"></td><td class="gssb_e" style="width: 100%;"></td></tr></tbody></table><iframe style="display: none;"></iframe></body></html>
